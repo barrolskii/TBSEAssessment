@@ -188,18 +188,18 @@ namespace TBSEAssessmentOne
 			string B3storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
 			string[] B3storeCodesData = File.ReadAllLines(B3storeCodesFilePath);
 
-			string[] fileNames = Directory.GetFiles(folderPath);
+			//string[] fileNames = Directory.GetFiles(folderPath);
 
-			Task t1 = new Task(() => AddStores(ref B3stores, ref B3storeCodesData));
+			/*Task t1 = new Task(() => AddStores(ref B3stores, ref B3storeCodesData));
 			Task t2 = new Task(() => AddDatesAndOrders(ref B3stores, ref B3dates, ref B3orders, ref fileNames));
 
 			t1.Start();
 			t1.Wait();
 
 			t2.Start();
-			t2.Wait();
+			t2.Wait();*/
 
-			/*foreach (var storeData in B3storeCodesData)
+			foreach (var storeData in B3storeCodesData)
 			{
 				string[] storeDataSplit = storeData.Split(',');
 				Store store = new Store { storeCode = storeDataSplit[0], storeLocation = storeDataSplit[1] };
@@ -208,14 +208,14 @@ namespace TBSEAssessmentOne
 
 				//storeDataSplit[0] = store code
 				//storeDataSplit[1] = store location
-			}*/
+			}
 
-			//string[] fileNames = Directory.GetFiles(folderPath);
+			string[] fileNames = Directory.GetFiles(folderPath);
 
 			//Task t1 = new Task(() => AddDate(ref B3dates, ref fileNames));
 			//Task t2 = new Task(() => AddOrder(ref B3orders, ref fileNames));
 
-			/*foreach (var filePath in fileNames)
+			foreach (var filePath in fileNames)
 			{
 				string fileNameExt = Path.GetFileName(filePath);
 				string fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -245,7 +245,7 @@ namespace TBSEAssessmentOne
 					//orderSplit[1] = supplier type
 					//orderSplit[2] = cost
 				}
-			}*/
+			}
 
 			/*List<string> suppliers = new List<string>();
 			foreach (var o in B3orders)
@@ -359,6 +359,34 @@ namespace TBSEAssessmentOne
 			string[] fileNames = Directory.GetFiles(folderPath);
 
 			ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
+			ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
+
+			/*Parallel.ForEach(fileNames, file =>
+			{
+				string fileName = Path.GetFileNameWithoutExtension(file);
+				string[] fileNameSplit = fileName.Split('_');
+
+				Store store = Stores[fileNameSplit[0]];
+				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
+
+				string[] data = File.ReadAllLines(file);
+				foreach (var s in data)
+				{
+					string[] fileData = s.Split(',');
+
+					Order order = new Order
+					{
+						store = store,
+						date = date,
+						supplier = fileData[0],
+						supplierType = fileData[1],
+						cost = Convert.ToDouble(fileData[2])
+					};
+
+					queueOrder.Enqueue(order);
+				}
+
+			}); // 30 seconds longest time and 5 seconds shortest */
 
 			/*Parallel.ForEach(fileNames, file =>
 			{
@@ -369,24 +397,83 @@ namespace TBSEAssessmentOne
 				}
 			}); // 2 Seconds best time on this implementation */
 
-			foreach (var filePath in fileNames)
+			/*foreach (var filePath in fileNames)
 			{
 				string[] fileData = File.ReadAllLines(filePath);
 				Parallel.ForEach(fileData, data =>
 				{
 					queue.Enqueue(data);
 				});
-			} // 4 seconds for this implementation
+			} // 4 seconds for this implementation*/
 
-			/*foreach (var s in queue)
+			/*ConcurrentDictionary<Store, List<Order>> storeOrders = new ConcurrentDictionary<Store, List<Order>>();
+			foreach (var filePath in fileNames)
 			{
-				string[] orderSplit = s.Split(',');
-			}*/
+				string fileName = Path.GetFileNameWithoutExtension(filePath);
+				string[] fileNameSplit = fileName.Split('_');
+
+				string[] fileData = File.ReadAllLines(filePath);
+				string[] storeData = filePath.Split('_');
+
+				Store store = Stores[fileNameSplit[0]];
+
+				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
+
+				Parallel.ForEach(fileData, data =>
+				{
+					string[] orderSplit = data.Split(',');
+
+					Order order = new Order
+					{
+						store = store,
+						date = date,
+						supplier = orderSplit[0],
+						supplierType = orderSplit[1],
+						cost = Convert.ToDouble(orderSplit[2])
+					};
+
+					if (!storeOrders.Keys.Contains(store))
+						storeOrders.TryAdd(store, new List<Order> { order });
+					else
+						storeOrders[store].Add(order);
+				});
+			} // 38 seconds average for this implementation */
+
+
+			Parallel.ForEach(fileNames, filePath =>
+			{
+				string fileName = Path.GetFileNameWithoutExtension(filePath);
+				string[] fileNameSplit = fileName.Split('_');
+
+				string[] fileData = File.ReadAllLines(filePath);
+				string[] storeData = filePath.Split('_');
+
+				Store store = Stores[fileNameSplit[0]];
+
+				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
+
+				foreach (var data in fileData)
+				{
+					string[] orderSplit = data.Split(',');
+
+					Order order = new Order
+					{
+						store = store,
+						date = date,
+						supplier = orderSplit[0],
+						supplierType = orderSplit[1],
+						cost = Convert.ToDouble(orderSplit[2])
+					};
+
+					queueOrder.Enqueue(order);
+				}
+			}); // 39 seconds worst and 5 seconds best
 
 
 			stopwatch.Stop();
 			richTextBox4.Text += "Time to load: " + stopwatch.Elapsed + '\n';
-			richTextBox4.Text += "Queue count: " + queue.Count;
+			richTextBox4.Text += "Queue count: " + queue.Count + '\n';
+			richTextBox4.Text += "Queue order count: " + queueOrder.Count;
 		}
 
 		private void CostOfAllOrdersInAWeekForASupplierTypeForAStore()
