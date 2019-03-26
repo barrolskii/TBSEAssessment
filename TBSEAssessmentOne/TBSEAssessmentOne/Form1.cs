@@ -17,10 +17,13 @@ namespace TBSEAssessmentOne
 	public partial class Form1 : Form
 	{
 		string storeCSVFileLocation;
+		Task t1;
 
 		public Form1()
 		{
 			InitializeComponent();
+
+			t1 = new Task(() => ReadAllData());
 
 			/* Disable use of combo boxes until data is loaded in */
 			comboBox1.Enabled = false;
@@ -31,7 +34,8 @@ namespace TBSEAssessmentOne
 			for (int i = 1; i <= 52; i++)
 				comboBox2.Items.Add(i);
 
-			/* Only two years to choose from in the files so this combo box
+			/*
+			 *Only two years to choose from in the files so this combo box
 			 * only needs two options
 			 */
 			comboBox3.Items.Add(2013);
@@ -56,62 +60,84 @@ namespace TBSEAssessmentOne
 
 			int fileCount = 0;
 
+
 			if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				richTextBox2.Text = openFileDialog.FileName;
 
-				Dictionary<string, Store> Stores = new Dictionary<string, Store>();
-				HashSet<Date> dates = new HashSet<Date>();
-				List<Order> orders = new List<Order>();
-
-				string[] storeList = File.ReadAllLines(openFileDialog.FileName);
-
-				foreach (var s in storeList)
-				{
-					string[] splitStoreData = s.Split(',');
-
-					Store newStore = new Store { storeCode = splitStoreData[0], storeLocation = splitStoreData[1] };
-					if (!Stores.ContainsKey(newStore.storeCode))
-						Stores.Add(newStore.storeCode, newStore);
-
-					dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation);
-					comboBox1.Items.Add(newStore.storeCode);
-				}
-
-				/* When the store list file is loaded in the folder containing the individual store
-				 * files will be in the same directory as it 
-				 */
-				storeCSVFileLocation = openFileDialog.InitialDirectory + @"/StoreData/";
-
-				string[] fileNames = Directory.GetFiles(openFileDialog.InitialDirectory + @"/StoreData");
-				ConcurrentQueue<string> foo = new ConcurrentQueue<string>();
-
-				Stopwatch stopwatch = new Stopwatch();
-				stopwatch.Start();
-
-				ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
-				string[] testOrderData = File.ReadAllLines(openFileDialog.InitialDirectory + @"/StoreData/ABE1_1_2013.csv");
-				Parallel.ForEach(testOrderData, data =>
-				{
-					queue.Enqueue(data);
-				});
-
-				foreach (var s in queue)
-				{
-					string[] orderSplit = s.Split(',');
-				}
-
-
-				stopwatch.Stop();
-				textBox1.Text += "Time to load: " + stopwatch.Elapsed;
-				richTextBox1.Text += "File count = " + fileCount + '\n';
-				richTextBox1.Text += "Queue count = " + foo.Count+ '\n';
+				t1.Start();
 
 				/* Enable combo boxes for search queries*/
 				comboBox1.Enabled = true;
 				comboBox2.Enabled = true;
 				comboBox3.Enabled = true;
 			}
+		}
+
+		private void ReadAllData()
+		{
+			string folderPath = "StoreData";
+			string storeCodesFile = "StoreCodes.csv";
+
+			Dictionary<string, Store> Stores = new Dictionary<string, Store>();
+
+			string storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
+			string[] storeList = File.ReadAllLines(storeCodesFilePath);
+
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+
+			foreach (var s in storeList)
+			{
+				string[] splitStoreData = s.Split(',');
+
+				Store newStore = new Store { storeCode = splitStoreData[0], storeLocation = splitStoreData[1] };
+				if (!Stores.ContainsKey(newStore.storeCode))
+					Stores.Add(newStore.storeCode, newStore);
+
+				dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation)));
+				comboBox1.Invoke(new Action(() => comboBox1.Items.Add(newStore.storeCode)));
+			}
+
+			string[] fileNames = Directory.GetFiles(folderPath);
+
+			ConcurrentQueue<Date> queueDate = new ConcurrentQueue<Date>();
+			ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
+
+			Parallel.ForEach(fileNames, file =>
+			{
+				string fileName = Path.GetFileNameWithoutExtension(file);
+				string[] fileNameSplit = fileName.Split('_');
+
+				Store store = Stores[fileNameSplit[0]];
+				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
+				queueDate.Enqueue(date);
+
+				string[] data = File.ReadAllLines(file);
+				foreach (var s in data)
+				{
+					string[] fileData = s.Split(',');
+
+					Order order = new Order
+					{
+						store = store,
+						date = date,
+						supplier = fileData[0],
+						supplierType = fileData[1],
+						cost = Convert.ToDouble(fileData[2])
+					};
+
+					queueOrder.Enqueue(order);
+				}
+
+			}); // 30 seconds longest time and 5 seconds shortest */
+
+
+			stopwatch.Stop();
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count));
 		}
 
 		class Store
@@ -143,16 +169,14 @@ namespace TBSEAssessmentOne
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 
-			string fileToSearch = storeCSVFileLocation + comboBox1.Text + '_' + comboBox2.Text + '_' + comboBox3.Text + ".csv";
+			string fileToSearch = storeCSVFileLocation + "StoreData/" + comboBox1.Text + '_' + comboBox2.Text + '_' + comboBox3.Text + ".csv";
 			string[] storeData = File.ReadAllLines(fileToSearch);
 
 			/* If the cell rows already contain data then remove them */
 			if (dataGridView2.Rows.Count >= 2)
 			{
-				for (int i = 0; i < dataGridView2.Rows.Count - 1; i++)
-				{
-					dataGridView2.Rows.RemoveAt(i);
-				}
+				richTextBox1.Text += "Rows begin deleted" + '\n';
+				dataGridView2.Rows.Clear();
 			}
 
 			foreach (var s in storeData)
@@ -322,158 +346,8 @@ namespace TBSEAssessmentOne
 			//CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
-			ReadAllData();
-		}
 
-		private void ReadAllData()
-		{
-			string folderPath = "StoreData";
-			string storeCodesFile = "StoreCodes.csv";
-
-			Dictionary<string, Store> Stores = new Dictionary<string, Store>();
-			HashSet<Date> dates = new HashSet<Date>();
-			List<Order> orders = new List<Order>();
-
-			string storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
-			string[] storeList = File.ReadAllLines(storeCodesFilePath);
-
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-
-			foreach (var s in storeList)
-			{
-				string[] splitStoreData = s.Split(',');
-
-				Store newStore = new Store { storeCode = splitStoreData[0], storeLocation = splitStoreData[1] };
-				if (!Stores.ContainsKey(newStore.storeCode))
-					Stores.Add(newStore.storeCode, newStore);
-
-				dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation);
-				comboBox1.Items.Add(newStore.storeCode);
-			}
-
-			/* When the store list file is loaded in the folder containing the individual store
-			 * files will be in the same directory as it 
-			 */
-
-			string[] fileNames = Directory.GetFiles(folderPath);
-
-			ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
-			ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
-
-			/*Parallel.ForEach(fileNames, file =>
-			{
-				string fileName = Path.GetFileNameWithoutExtension(file);
-				string[] fileNameSplit = fileName.Split('_');
-
-				Store store = Stores[fileNameSplit[0]];
-				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
-
-				string[] data = File.ReadAllLines(file);
-				foreach (var s in data)
-				{
-					string[] fileData = s.Split(',');
-
-					Order order = new Order
-					{
-						store = store,
-						date = date,
-						supplier = fileData[0],
-						supplierType = fileData[1],
-						cost = Convert.ToDouble(fileData[2])
-					};
-
-					queueOrder.Enqueue(order);
-				}
-
-			}); // 30 seconds longest time and 5 seconds shortest */
-
-			/*Parallel.ForEach(fileNames, file =>
-			{
-				string[] data = File.ReadAllLines(file);
-				foreach (var s in data)
-				{
-					queue.Enqueue(s);
-				}
-			}); // 2 Seconds best time on this implementation */
-
-			/*foreach (var filePath in fileNames)
-			{
-				string[] fileData = File.ReadAllLines(filePath);
-				Parallel.ForEach(fileData, data =>
-				{
-					queue.Enqueue(data);
-				});
-			} // 4 seconds for this implementation*/
-
-			/*ConcurrentDictionary<Store, List<Order>> storeOrders = new ConcurrentDictionary<Store, List<Order>>();
-			foreach (var filePath in fileNames)
-			{
-				string fileName = Path.GetFileNameWithoutExtension(filePath);
-				string[] fileNameSplit = fileName.Split('_');
-
-				string[] fileData = File.ReadAllLines(filePath);
-				string[] storeData = filePath.Split('_');
-
-				Store store = Stores[fileNameSplit[0]];
-
-				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
-
-				Parallel.ForEach(fileData, data =>
-				{
-					string[] orderSplit = data.Split(',');
-
-					Order order = new Order
-					{
-						store = store,
-						date = date,
-						supplier = orderSplit[0],
-						supplierType = orderSplit[1],
-						cost = Convert.ToDouble(orderSplit[2])
-					};
-
-					if (!storeOrders.Keys.Contains(store))
-						storeOrders.TryAdd(store, new List<Order> { order });
-					else
-						storeOrders[store].Add(order);
-				});
-			} // 38 seconds average for this implementation */
-
-
-			Parallel.ForEach(fileNames, filePath =>
-			{
-				string fileName = Path.GetFileNameWithoutExtension(filePath);
-				string[] fileNameSplit = fileName.Split('_');
-
-				string[] fileData = File.ReadAllLines(filePath);
-				string[] storeData = filePath.Split('_');
-
-				Store store = Stores[fileNameSplit[0]];
-
-				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
-
-				foreach (var data in fileData)
-				{
-					string[] orderSplit = data.Split(',');
-
-					Order order = new Order
-					{
-						store = store,
-						date = date,
-						supplier = orderSplit[0],
-						supplierType = orderSplit[1],
-						cost = Convert.ToDouble(orderSplit[2])
-					};
-
-					queueOrder.Enqueue(order);
-				}
-			}); // 39 seconds worst and 5 seconds best
-
-
-			stopwatch.Stop();
-			richTextBox4.Text += "Time to load: " + stopwatch.Elapsed + '\n';
-			richTextBox4.Text += "Queue count: " + queue.Count + '\n';
-			richTextBox4.Text += "Queue order count: " + queueOrder.Count;
+			t1.Start();
 		}
 
 		private void CostOfAllOrdersInAWeekForASupplierTypeForAStore()
