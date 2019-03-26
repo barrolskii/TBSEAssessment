@@ -35,7 +35,7 @@ namespace TBSEAssessmentOne
 				comboBox2.Items.Add(i);
 
 			/*
-			 *Only two years to choose from in the files so this combo box
+			 * Only two years to choose from in the files so this combo box
 			 * only needs two options
 			 */
 			comboBox3.Items.Add(2013);
@@ -58,19 +58,12 @@ namespace TBSEAssessmentOne
 			openFileDialog.Filter = "CSV files|*.csv";
 			openFileDialog.Title = "File";
 
-			int fileCount = 0;
-
 
 			if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				richTextBox2.Text = openFileDialog.FileName;
 
 				t1.Start();
-
-				/* Enable combo boxes for search queries*/
-				comboBox1.Enabled = true;
-				comboBox2.Enabled = true;
-				comboBox3.Enabled = true;
 			}
 		}
 
@@ -130,7 +123,7 @@ namespace TBSEAssessmentOne
 					queueOrder.Enqueue(order);
 				}
 
-			}); // 30 seconds longest time and 5 seconds shortest */
+			});
 
 
 			stopwatch.Stop();
@@ -138,28 +131,11 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count));
-		}
 
-		class Store
-		{
-			public string storeCode { get; set; }
-			public string storeLocation { get; set; }
-		}
-
-		class Order
-		{
-			public Store store { get; set; }
-
-			public Date date { get; set; }
-			public string supplier { get; set; }
-			public string supplierType { get; set; }
-			public double cost { get; set; }
-		}
-
-		class Date
-		{
-			public int week { get; set; }
-			public int year { get; set; }
+			/* Enable combo boxes for search queries*/
+			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
+			comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
+			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
 		}
 
 		private void button2_Click(object sender, EventArgs e)
