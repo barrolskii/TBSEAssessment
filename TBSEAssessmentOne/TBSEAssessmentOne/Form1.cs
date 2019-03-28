@@ -125,12 +125,29 @@ namespace TBSEAssessmentOne
 
 			});
 
+			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
+
+			Date[] linqDates = (from date in queueDate
+								where date.year == 2013
+								select date).ToArray();
+
+			Date[] plinqDates = (from date in queueDate.AsParallel()
+							where date.year == 2013
+							select date).ToArray();
 
 			stopwatch.Stop();
+
+			textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
+
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
+
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
+
 
 			/* Enable combo boxes for search queries*/
 			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
@@ -261,60 +278,9 @@ namespace TBSEAssessmentOne
 			richTextBox3.Text += "TimeToLoad: " + stopWatch.Elapsed.TotalSeconds + '\n'; // Original time to load: 126.3266181
 		}
 
-		private void AddStores(ref Dictionary<string, Store> stores, ref string[] data)
-		{
-			foreach (var storeData in data)
-			{
-				string[] storeDataSplit = storeData.Split(',');
-				Store store = new Store { storeCode = storeDataSplit[0], storeLocation = storeDataSplit[1] };
-				if (!stores.ContainsKey(store.storeCode))
-					stores.Add(store.storeCode, store);
-
-				//storeDataSplit[0] = store code
-				//storeDataSplit[1] = store location
-			}
-		}
-
-		private void AddDatesAndOrders(ref Dictionary<string, Store> stores, ref HashSet<Date> dates, ref List<Order> orders, ref string[] data)
-		{
-			foreach (var filePath in data)
-			{
-				string fileNameExt = Path.GetFileName(filePath);
-				string fileName = Path.GetFileNameWithoutExtension(filePath);
-				string folderPath = "StoreData";
-
-				string[] fileNameSplit = fileName.Split('_');
-				Store store = stores[fileNameSplit[0]];
-				Date date = new Date { week = Convert.ToInt32(fileNameSplit[1]), year = Convert.ToInt32(fileNameSplit[2]) };
-				dates.Add(date);
-				//fileNameSplit[0] = store code
-				//fileNameSplit[1] = week number
-				//fileNameSplit[2] = year
-
-				string[] orderData = File.ReadAllLines(folderPath + @"\" + fileNameExt);
-				foreach (var orderInfo in orderData)
-				{
-					string[] orderSplit = orderInfo.Split(',');
-					Order order = new Order
-					{
-						store = store,
-						date = date,
-						supplier = orderSplit[0],
-						supplierType = orderSplit[1],
-						cost = Convert.ToDouble(orderSplit[2])
-					};
-					orders.Add(order);
-					//orderSplit[0] = supplier name
-					//orderSplit[1] = supplier type
-					//orderSplit[2] = cost
-				}
-			}
-		}
-
-
 		private void button4_Click(object sender, EventArgs e)
 		{
-			//ReadAllFilesAndCountTotalCost();
+			ReadAllFilesAndCountTotalCost();
 			//ReadAllFilesInWeekRangeAndTotalCost();
 			//TotalCostForAllOrdersForAStore();
 			//CostOfAllOrdersToASupplier();
@@ -323,7 +289,7 @@ namespace TBSEAssessmentOne
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
 
-			t1.Start();
+			//t1.Start();
 		}
 
 		private void CostOfAllOrdersInAWeekForASupplierTypeForAStore()
