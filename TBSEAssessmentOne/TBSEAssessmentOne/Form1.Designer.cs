@@ -54,8 +54,9 @@
 			this.tabControl3 = new System.Windows.Forms.TabControl();
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.tabPage7 = new System.Windows.Forms.TabPage();
-			this.comboBox4 = new System.Windows.Forms.ComboBox();
 			this.comboBox5 = new System.Windows.Forms.ComboBox();
+			this.comboBox4 = new System.Windows.Forms.ComboBox();
+			this.button5 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
 			this.tabControl1.SuspendLayout();
@@ -327,6 +328,7 @@
 			// 
 			// tabPage7
 			// 
+			this.tabPage7.Controls.Add(this.button5);
 			this.tabPage7.Controls.Add(this.comboBox5);
 			this.tabPage7.Controls.Add(this.comboBox4);
 			this.tabPage7.Location = new System.Drawing.Point(4, 22);
@@ -337,6 +339,14 @@
 			this.tabPage7.Text = "Supplier Search";
 			this.tabPage7.UseVisualStyleBackColor = true;
 			// 
+			// comboBox5
+			// 
+			this.comboBox5.FormattingEnabled = true;
+			this.comboBox5.Location = new System.Drawing.Point(7, 59);
+			this.comboBox5.Name = "comboBox5";
+			this.comboBox5.Size = new System.Drawing.Size(131, 21);
+			this.comboBox5.TabIndex = 1;
+			// 
 			// comboBox4
 			// 
 			this.comboBox4.FormattingEnabled = true;
@@ -345,13 +355,14 @@
 			this.comboBox4.Size = new System.Drawing.Size(132, 21);
 			this.comboBox4.TabIndex = 0;
 			// 
-			// comboBox5
+			// button5
 			// 
-			this.comboBox5.FormattingEnabled = true;
-			this.comboBox5.Location = new System.Drawing.Point(7, 59);
-			this.comboBox5.Name = "comboBox5";
-			this.comboBox5.Size = new System.Drawing.Size(131, 21);
-			this.comboBox5.TabIndex = 1;
+			this.button5.Location = new System.Drawing.Point(7, 185);
+			this.button5.Name = "button5";
+			this.button5.Size = new System.Drawing.Size(107, 40);
+			this.button5.TabIndex = 12;
+			this.button5.Text = "Search Supplier";
+			this.button5.UseVisualStyleBackColor = true;
 			// 
 			// Form1
 			// 
@@ -417,6 +428,7 @@
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.ComboBox comboBox4;
 		private System.Windows.Forms.ComboBox comboBox5;
+		private System.Windows.Forms.Button button5;
 	}
 }
 

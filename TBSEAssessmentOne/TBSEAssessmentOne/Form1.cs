@@ -156,8 +156,10 @@ namespace TBSEAssessmentOne
 
 			}));
 
+			#region LINQ and PLINQ testing
 			/* LINQ and PLINQ testing */
 
+			// Total cost of all orders
 			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
 			Date[] linqDates = (from date in queueDate
@@ -168,14 +170,26 @@ namespace TBSEAssessmentOne
 								 where date.year == 2013
 								 select date).ToArray();
 
-			string supplier = "Cleaning"; // 18940385.4499995
-			double supplierCost = queueOrder.Where(order => order.supplierType == supplier).Select(order => order.cost).Sum();
-								  
+			string supplierType = "Cleaning"; // 18940385.4499995
+			string supplier = "Surf";
+
+			// Total cost to a supplier and a supplier type
+			double supplierTypeCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
+			double supplierCost = queueOrder.Where(order => order.supplier == supplier).Select(order => order.cost).Sum();
+			double supplierAndTypeCost = queueOrder.Where(order => order.supplier == supplier && order.supplierType == supplierType).Select(order => order.cost).Sum();
+
+
+			// Total cost of all orders in a week for all stores
+			int weekToSearch = 1;
+			double costOfAllOrdersInAWeek = queueOrder.Where(order => order.date.week == weekToSearch).Select(order => order.cost).Sum();
+			// 3724767.44000001
 
 			/* End of testing section */
+			#endregion
 
 			stopwatch.Stop();
 
+			#region Debugging messages
 			textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
@@ -184,11 +198,15 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier type total: " + supplierTypeCost + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier total: " + supplierCost + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier and type total: " + supplierAndTypeCost + '\n'));
+
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of orders in a week: " + costOfAllOrdersInAWeek + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
-
+			#endregion
 
 			/* Enable combo boxes for search queries*/
 			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
@@ -239,10 +257,10 @@ namespace TBSEAssessmentOne
 		private void button4_Click(object sender, EventArgs e)
 		{
 			//ReadAllFilesAndCountTotalCost();
-			//ReadAllFilesInWeekRangeAndTotalCost();
+			ReadAllFilesInWeekRangeAndTotalCost();
 			//TotalCostForAllOrdersForAStore();
 			//CostOfAllOrdersToASupplier();
-			CostOfAllOrdersToASupplierType();
+			//CostOfAllOrdersToASupplierType();
 			//CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
