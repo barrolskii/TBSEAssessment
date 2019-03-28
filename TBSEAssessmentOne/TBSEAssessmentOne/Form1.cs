@@ -125,6 +125,25 @@ namespace TBSEAssessmentOne
 
 			});
 
+
+			List<string> suppliers = new List<string>();
+			foreach(var order in queueOrder)
+			{
+				if (!suppliers.Contains(order.supplier))
+					suppliers.Add(order.supplier);
+			}
+
+			comboBox4.Invoke(new Action(() => 
+			{
+				foreach (var s in suppliers)
+				{
+					comboBox4.Items.Add(s);
+				}
+					
+			}));
+			
+			/* LINQ and PLINQ testing */
+
 			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
 			Date[] linqDates = (from date in queueDate
@@ -132,8 +151,14 @@ namespace TBSEAssessmentOne
 								select date).ToArray();
 
 			Date[] plinqDates = (from date in queueDate.AsParallel()
-							where date.year == 2013
-							select date).ToArray();
+								 where date.year == 2013
+								 select date).ToArray();
+
+			string supplier = "Cleaning"; // 18940385.4499995
+			double supplierCost = queueOrder.Where(order => order.supplierType == supplier).Select(order => order.cost).Sum();
+								  
+
+			/* End of testing section */
 
 			stopwatch.Stop();
 
@@ -145,6 +170,8 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier total: " + supplierCost + '\n'));
+
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
 
@@ -280,11 +307,11 @@ namespace TBSEAssessmentOne
 
 		private void button4_Click(object sender, EventArgs e)
 		{
-			ReadAllFilesAndCountTotalCost();
+			//ReadAllFilesAndCountTotalCost();
 			//ReadAllFilesInWeekRangeAndTotalCost();
 			//TotalCostForAllOrdersForAStore();
 			//CostOfAllOrdersToASupplier();
-			//CostOfAllOrdersToASupplierType();
+			CostOfAllOrdersToASupplierType();
 			//CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();

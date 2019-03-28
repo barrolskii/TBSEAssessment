@@ -37,6 +37,7 @@
 			this.dataGridView2 = new System.Windows.Forms.DataGridView();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -53,7 +54,7 @@
 			this.tabControl3 = new System.Windows.Forms.TabControl();
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.tabPage7 = new System.Windows.Forms.TabPage();
-			this.textBox3 = new System.Windows.Forms.TextBox();
+			this.comboBox4 = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
 			this.tabControl1.SuspendLayout();
@@ -63,6 +64,7 @@
 			this.tabControl2.SuspendLayout();
 			this.tabControl3.SuspendLayout();
 			this.tabPage6.SuspendLayout();
+			this.tabPage7.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -155,6 +157,13 @@
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Store List";
 			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// textBox3
+			// 
+			this.textBox3.Location = new System.Drawing.Point(6, 253);
+			this.textBox3.Name = "textBox3";
+			this.textBox3.Size = new System.Drawing.Size(168, 20);
+			this.textBox3.TabIndex = 3;
 			// 
 			// tabPage2
 			// 
@@ -312,25 +321,27 @@
 			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage6.Size = new System.Drawing.Size(225, 231);
 			this.tabPage6.TabIndex = 0;
-			this.tabPage6.Text = "Single Search";
+			this.tabPage6.Text = "Store Search";
 			this.tabPage6.UseVisualStyleBackColor = true;
 			// 
 			// tabPage7
 			// 
+			this.tabPage7.Controls.Add(this.comboBox4);
 			this.tabPage7.Location = new System.Drawing.Point(4, 22);
 			this.tabPage7.Name = "tabPage7";
 			this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage7.Size = new System.Drawing.Size(225, 231);
 			this.tabPage7.TabIndex = 1;
-			this.tabPage7.Text = "Multi Search";
+			this.tabPage7.Text = "Supplier Search";
 			this.tabPage7.UseVisualStyleBackColor = true;
 			// 
-			// textBox3
+			// comboBox4
 			// 
-			this.textBox3.Location = new System.Drawing.Point(6, 253);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(168, 20);
-			this.textBox3.TabIndex = 3;
+			this.comboBox4.FormattingEnabled = true;
+			this.comboBox4.Location = new System.Drawing.Point(6, 16);
+			this.comboBox4.Name = "comboBox4";
+			this.comboBox4.Size = new System.Drawing.Size(132, 21);
+			this.comboBox4.TabIndex = 0;
 			// 
 			// Form1
 			// 
@@ -360,6 +371,7 @@
 			this.tabControl2.ResumeLayout(false);
 			this.tabControl3.ResumeLayout(false);
 			this.tabPage6.ResumeLayout(false);
+			this.tabPage7.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -393,6 +405,7 @@
 		private System.Windows.Forms.TabPage tabPage6;
 		private System.Windows.Forms.TabPage tabPage7;
 		private System.Windows.Forms.TextBox textBox3;
+		private System.Windows.Forms.ComboBox comboBox4;
 	}
 }
 
