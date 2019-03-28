@@ -184,6 +184,9 @@ namespace TBSEAssessmentOne
 			double costOfAllOrdersInAWeek = queueOrder.Where(order => order.date.week == weekToSearch).Select(order => order.cost).Sum();
 			// 3724767.44000001
 
+			string storeCode = "ABE1";
+			double costForSupplierTypeSingleStore = queueOrder.Where(order => order.store.storeCode == storeCode && order.supplierType == supplierType).Select(order => order.cost).Sum();
+
 			/* End of testing section */
 			#endregion
 
@@ -203,6 +206,7 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier and type total: " + supplierAndTypeCost + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of orders in a week: " + costOfAllOrdersInAWeek + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store: " + costForSupplierTypeSingleStore + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
@@ -214,6 +218,7 @@ namespace TBSEAssessmentOne
 			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
 		}
 
+		// Function covers total cost for all orders in a week for a store
 		private void button2_Click(object sender, EventArgs e)
 		{
 			double totalCost = 0;
@@ -238,6 +243,8 @@ namespace TBSEAssessmentOne
 				totalCost += Convert.ToDouble(orderSplit[2]);
 			};
 
+
+
 			textBox2.Text = "Total cost: £" + totalCost;
 
 			sw.Stop();
@@ -251,18 +258,53 @@ namespace TBSEAssessmentOne
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			
+			string folderPath = "StoreData";
+			string supplierType = "Cleaning";
+			string store = "ABE1";
+			double supplierTotal = 0.0;
+
+			Stopwatch stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			string[] fileNames = Directory.GetFiles(folderPath);
+
+
+			foreach (var filePath in fileNames)
+			{
+				string[] splitPath = filePath.Split('_');
+				string[] splitName = splitPath[0].Split('\\');
+				if (splitName[1] == store)
+				{
+					dataGridView2.Rows.Add(splitPath);
+
+					string fileNameExt = Path.GetFileName(filePath);
+					string[] orderData = File.ReadAllLines(folderPath + @"\" + fileNameExt);
+
+					foreach (var orderInfo in orderData)
+					{
+						string[] orderSplit = orderInfo.Split(',');
+						if (orderSplit[1] == supplierType)
+						{
+							supplierTotal += Convert.ToDouble(orderSplit[2]);
+						}
+					}
+				}
+			}
+			stopWatch.Stop();
+
+			richTextBox4.Text += "TimeToLoad: " + stopWatch.Elapsed + '\n';
+			richTextBox4.Text += "Total cost: " + supplierTotal + '\n';
 		}
 
 		private void button4_Click(object sender, EventArgs e)
 		{
 			//ReadAllFilesAndCountTotalCost();
-			ReadAllFilesInWeekRangeAndTotalCost();
+			//ReadAllFilesInWeekRangeAndTotalCost();
 			//TotalCostForAllOrdersForAStore();
 			//CostOfAllOrdersToASupplier();
 			//CostOfAllOrdersToASupplierType();
 			//CostOfAllOrdersInAWeekForASupplierType();
-			//CostOfAllOrdersForASupplierTypeForAStore();
+			CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
 
 			//t1.Start();
