@@ -127,10 +127,15 @@ namespace TBSEAssessmentOne
 
 
 			List<string> suppliers = new List<string>();
+			List<string> supplierTypes = new List<string>();
+
 			foreach(var order in queueOrder)
 			{
 				if (!suppliers.Contains(order.supplier))
 					suppliers.Add(order.supplier);
+
+				if (!supplierTypes.Contains(order.supplierType))
+					supplierTypes.Add(order.supplierType);
 			}
 
 			comboBox4.Invoke(new Action(() => 
@@ -141,7 +146,16 @@ namespace TBSEAssessmentOne
 				}
 					
 			}));
-			
+
+			comboBox5.Invoke(new Action(() =>
+			{
+				foreach (var s in supplierTypes)
+				{
+					comboBox5.Items.Add(s);
+				}
+
+			}));
+
 			/* LINQ and PLINQ testing */
 
 			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997

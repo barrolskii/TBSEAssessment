@@ -55,6 +55,7 @@
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.tabPage7 = new System.Windows.Forms.TabPage();
 			this.comboBox4 = new System.Windows.Forms.ComboBox();
+			this.comboBox5 = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
 			this.tabControl1.SuspendLayout();
@@ -326,6 +327,7 @@
 			// 
 			// tabPage7
 			// 
+			this.tabPage7.Controls.Add(this.comboBox5);
 			this.tabPage7.Controls.Add(this.comboBox4);
 			this.tabPage7.Location = new System.Drawing.Point(4, 22);
 			this.tabPage7.Name = "tabPage7";
@@ -342,6 +344,14 @@
 			this.comboBox4.Name = "comboBox4";
 			this.comboBox4.Size = new System.Drawing.Size(132, 21);
 			this.comboBox4.TabIndex = 0;
+			// 
+			// comboBox5
+			// 
+			this.comboBox5.FormattingEnabled = true;
+			this.comboBox5.Location = new System.Drawing.Point(7, 59);
+			this.comboBox5.Name = "comboBox5";
+			this.comboBox5.Size = new System.Drawing.Size(131, 21);
+			this.comboBox5.TabIndex = 1;
 			// 
 			// Form1
 			// 
@@ -406,6 +416,7 @@
 		private System.Windows.Forms.TabPage tabPage7;
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.ComboBox comboBox4;
+		private System.Windows.Forms.ComboBox comboBox5;
 	}
 }
 
