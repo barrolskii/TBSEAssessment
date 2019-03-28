@@ -184,8 +184,15 @@ namespace TBSEAssessmentOne
 			double costOfAllOrdersInAWeek = queueOrder.Where(order => order.date.week == weekToSearch).Select(order => order.cost).Sum();
 			// 3724767.44000001
 
+			// Total cost for a supplier type for a store
 			string storeCode = "ABE1";
 			double costForSupplierTypeSingleStore = queueOrder.Where(order => order.store.storeCode == storeCode && order.supplierType == supplierType).Select(order => order.cost).Sum();
+
+
+			// Total cost for a supplier type for a store in a week
+			int week = 1;
+			double costForSupplierTypeSingleStoreInWeek = queueOrder.Where(order => order.store.storeCode == storeCode && order.supplierType == supplierType && order.date.week == week)
+																	.Select(order => order.cost).Sum();
 
 			/* End of testing section */
 			#endregion
@@ -207,6 +214,7 @@ namespace TBSEAssessmentOne
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of orders in a week: " + costOfAllOrdersInAWeek + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store: " + costForSupplierTypeSingleStore + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store in a week: " + costForSupplierTypeSingleStoreInWeek + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
@@ -304,8 +312,8 @@ namespace TBSEAssessmentOne
 			//CostOfAllOrdersToASupplier();
 			//CostOfAllOrdersToASupplierType();
 			//CostOfAllOrdersInAWeekForASupplierType();
-			CostOfAllOrdersForASupplierTypeForAStore();
-			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
+			//CostOfAllOrdersForASupplierTypeForAStore();
+			CostOfAllOrdersInAWeekForASupplierTypeForAStore();
 
 			//t1.Start();
 		}
