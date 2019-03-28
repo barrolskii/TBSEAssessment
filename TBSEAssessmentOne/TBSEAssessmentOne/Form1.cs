@@ -197,6 +197,10 @@ namespace TBSEAssessmentOne
 			// Total cost for all orders for a single store
 			double costOfAllOrdersToSingleStore = queueOrder.Where(order => order.store.storeCode == storeCode).Select(order => order.cost).Sum();
 
+
+			// Cost of all orders in a week for a supplier
+			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();
+
 			/* End of testing section */
 			#endregion
 
@@ -220,6 +224,7 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store in a week: " + costForSupplierTypeSingleStoreInWeek + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of all orders to a single store: " + costOfAllOrdersToSingleStore + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of all orders to a supplier in a week: " + costOfAllOrdersToASupplierInAWeek + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
@@ -313,10 +318,10 @@ namespace TBSEAssessmentOne
 		{
 			//ReadAllFilesAndCountTotalCost();
 			//ReadAllFilesInWeekRangeAndTotalCost();
-			TotalCostForAllOrdersForAStore();
+			//TotalCostForAllOrdersForAStore();
 			//CostOfAllOrdersToASupplier();
 			//CostOfAllOrdersToASupplierType();
-			//CostOfAllOrdersInAWeekForASupplierType();
+			CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
 
@@ -407,7 +412,7 @@ namespace TBSEAssessmentOne
 		{
 			string folderPath = "StoreData";
 			int weekToSearch = 1;
-			string supplierType = "Cleaning";
+			string supplier = "Heinz";
 			double supplierTotal = 0.0;
 
 			Stopwatch stopWatch = new Stopwatch();
@@ -426,7 +431,7 @@ namespace TBSEAssessmentOne
 					foreach (var orderInfo in orderData)
 					{
 						string[] orderSplit = orderInfo.Split(',');
-						if (orderSplit[1] == supplierType)
+						if (orderSplit[0] == supplier)
 						{
 							supplierTotal += Convert.ToDouble(orderSplit[2]);
 						}
