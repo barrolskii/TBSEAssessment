@@ -25,30 +25,8 @@ namespace TBSEAssessmentOne
 
 			t1 = new Task(() => ReadAllData());
 
-			/* Disable use of combo boxes until data is loaded in */
-			comboBox1.Enabled = false;
-			comboBox2.Enabled = false;
-			comboBox3.Enabled = false;
-
-			/* Populate the second combo box to have a selection of weeks */
-			for (int i = 1; i <= 52; i++)
-				comboBox2.Items.Add(i);
-
-			/*
-			 * Only two years to choose from in the files so this combo box
-			 * only needs two options
-			 */
-			comboBox3.Items.Add(2013);
-			comboBox3.Items.Add(2014);
-
-			dataGridView1.ColumnCount = 2;
-			dataGridView1.Columns[0].Name = "StoreCode";
-			dataGridView1.Columns[1].Name = "StoreName";
-
-			dataGridView2.ColumnCount = 3;
-			dataGridView2.Columns[0].Name = "Supplier";
-			dataGridView2.Columns[1].Name = "Supplier type";
-			dataGridView2.Columns[2].Name = "Cost";
+			InitComboBoxes();
+			InitDataGridViewBoxes();
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -160,7 +138,7 @@ namespace TBSEAssessmentOne
 			/* LINQ and PLINQ testing */
 
 			// Total cost of all orders
-			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
+			/*double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
 			Date[] linqDates = (from date in queueDate
 								where date.year == 2013
@@ -199,14 +177,14 @@ namespace TBSEAssessmentOne
 
 
 			// Cost of all orders in a week for a supplier
-			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();
+			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();*/
 
 			/* End of testing section */
 			#endregion
 
 			stopwatch.Stop();
 
-			#region Debugging messages
+			/*#region Debugging messages
 			textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
@@ -228,7 +206,7 @@ namespace TBSEAssessmentOne
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
-			#endregion
+			#endregion*/
 
 			/* Enable combo boxes for search queries*/
 			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
@@ -240,6 +218,8 @@ namespace TBSEAssessmentOne
 		private void button2_Click(object sender, EventArgs e)
 		{
 			double totalCost = 0;
+
+			Dictionary<string, double> SupplierCost = new Dictionary<string, double>();
 
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
@@ -257,15 +237,30 @@ namespace TBSEAssessmentOne
 			foreach (var s in storeData)
 			{
 				string[] orderSplit = s.Split(',');
+
 				dataGridView2.Rows.Add(orderSplit[0], orderSplit[1], orderSplit[2]);
 				totalCost += Convert.ToDouble(orderSplit[2]);
-			};
 
+				if (!SupplierCost.Keys.Contains(orderSplit[0]))
+				{
+					SupplierCost.Add(orderSplit[0], Convert.ToDouble(orderSplit[2]));
+				}
+				else
+				{
+					SupplierCost[orderSplit[0]] += Convert.ToDouble(orderSplit[2]);
+				}
+			}
 
+			foreach (var s in SupplierCost)
+			{
+				chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
+			}
 
 			textBox2.Text = "Total cost: £" + totalCost;
 
 			sw.Stop();
+
+			tabControl1.SelectedTab = tabPage2;
 
 			/* Output for debgging purposes */
 			richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
@@ -622,6 +617,42 @@ namespace TBSEAssessmentOne
 			richTextBox4.Text += "Count: " + fileNames.Length + '\n';
 			richTextBox4.Text += "Total cost: " + totalCost + '\n'; // np: 197186552.640005 
 			richTextBox4.Text += "Total lines: " + totalLines; // np: 5254571
+		}
+
+		private void InitComboBoxes()
+		{
+			/* Disable use of combo boxes until data is loaded in */
+			comboBox1.Enabled = false;
+			comboBox2.Enabled = false;
+			comboBox3.Enabled = false;
+
+			/* Populate the second combo box to have a selection of weeks */
+			for (int i = 1; i <= 52; i++)
+				comboBox2.Items.Add(i);
+
+			/*
+			 * Only two years to choose from in the files so this combo box
+			 * only needs two options
+			 */
+			comboBox3.Items.Add(2013);
+			comboBox3.Items.Add(2014);
+		}
+
+		private void InitDataGridViewBoxes()
+		{
+			dataGridView1.ColumnCount = 2;
+			dataGridView1.Columns[0].Name = "StoreCode";
+			dataGridView1.Columns[1].Name = "StoreName";
+
+			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+
+			dataGridView2.ColumnCount = 3;
+			dataGridView2.Columns[0].Name = "Supplier";
+			dataGridView2.Columns[1].Name = "Supplier type";
+			dataGridView2.Columns[2].Name = "Cost";
+
+			dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 		}
 	}
 }
