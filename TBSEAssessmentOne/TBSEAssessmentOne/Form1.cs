@@ -232,8 +232,24 @@ namespace TBSEAssessmentOne
 			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
 		}
 
+		private void button5_Click(object sender, EventArgs e)
+		{
+			if (comboBox4.Text != "")
+			{
+
+			}
+
+			if (comboBox5.Text != "")
+			{
+
+			}
+		}
+
 		private void button6_Click(object sender, EventArgs e)
 		{
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+
 			if (comboBox6.Text != "")
 			{
 				int weekToSearch = Convert.ToInt32(comboBox6.Text);
@@ -255,9 +271,11 @@ namespace TBSEAssessmentOne
 				string supplierType = comboBox8.Text;
 				double supplierTypeCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
 
-
 				richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Total cost: £" + supplierTypeCost + '\n'));
 			}
+
+			sw.Stop();
+			richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Time: " + sw.Elapsed + '\n'));
 		}
 
 		// Function covers total cost for all orders in a week for a store
@@ -377,11 +395,6 @@ namespace TBSEAssessmentOne
 			CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
-		}
-
-		private void button5_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void CostOfAllOrdersInAWeekForASupplierTypeForAStore()

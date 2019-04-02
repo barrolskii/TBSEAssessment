@@ -28,9 +28,9 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.button1 = new System.Windows.Forms.Button();
 			this.richTextBox1 = new System.Windows.Forms.RichTextBox();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -55,14 +55,14 @@
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.tabPage7 = new System.Windows.Forms.TabPage();
 			this.button5 = new System.Windows.Forms.Button();
-			this.comboBox5 = new System.Windows.Forms.ComboBox();
-			this.comboBox4 = new System.Windows.Forms.ComboBox();
 			this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.comboBox6 = new System.Windows.Forms.ComboBox();
 			this.comboBox7 = new System.Windows.Forms.ComboBox();
 			this.comboBox8 = new System.Windows.Forms.ComboBox();
 			this.button6 = new System.Windows.Forms.Button();
+			this.comboBox4 = new System.Windows.Forms.ComboBox();
+			this.comboBox5 = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
 			this.tabControl1.SuspendLayout();
@@ -308,9 +308,9 @@
 			// 
 			// tabPage7
 			// 
-			this.tabPage7.Controls.Add(this.button5);
 			this.tabPage7.Controls.Add(this.comboBox5);
 			this.tabPage7.Controls.Add(this.comboBox4);
+			this.tabPage7.Controls.Add(this.button5);
 			this.tabPage7.Location = new System.Drawing.Point(4, 22);
 			this.tabPage7.Name = "tabPage7";
 			this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
@@ -329,34 +329,18 @@
 			this.button5.UseVisualStyleBackColor = true;
 			this.button5.Click += new System.EventHandler(this.button5_Click);
 			// 
-			// comboBox5
-			// 
-			this.comboBox5.FormattingEnabled = true;
-			this.comboBox5.Location = new System.Drawing.Point(7, 59);
-			this.comboBox5.Name = "comboBox5";
-			this.comboBox5.Size = new System.Drawing.Size(131, 21);
-			this.comboBox5.TabIndex = 1;
-			// 
-			// comboBox4
-			// 
-			this.comboBox4.FormattingEnabled = true;
-			this.comboBox4.Location = new System.Drawing.Point(6, 16);
-			this.comboBox4.Name = "comboBox4";
-			this.comboBox4.Size = new System.Drawing.Size(132, 21);
-			this.comboBox4.TabIndex = 0;
-			// 
 			// chart1
 			// 
-			chartArea8.Name = "ChartArea1";
-			this.chart1.ChartAreas.Add(chartArea8);
-			legend8.Name = "Legend1";
-			this.chart1.Legends.Add(legend8);
+			chartArea9.Name = "ChartArea1";
+			this.chart1.ChartAreas.Add(chartArea9);
+			legend9.Name = "Legend1";
+			this.chart1.Legends.Add(legend9);
 			this.chart1.Location = new System.Drawing.Point(318, 5);
 			this.chart1.Name = "chart1";
-			series8.ChartArea = "ChartArea1";
-			series8.Legend = "Legend1";
-			series8.Name = "Supplier costs";
-			this.chart1.Series.Add(series8);
+			series9.ChartArea = "ChartArea1";
+			series9.Legend = "Legend1";
+			series9.Name = "Supplier costs";
+			this.chart1.Series.Add(series9);
 			this.chart1.Size = new System.Drawing.Size(548, 505);
 			this.chart1.TabIndex = 8;
 			this.chart1.Text = "chart1";
@@ -413,6 +397,26 @@
 			this.button6.Text = "Search All";
 			this.button6.UseVisualStyleBackColor = true;
 			this.button6.Click += new System.EventHandler(this.button6_Click);
+			// 
+			// comboBox4
+			// 
+			this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBox4.FormattingEnabled = true;
+			this.comboBox4.Location = new System.Drawing.Point(7, 28);
+			this.comboBox4.Margin = new System.Windows.Forms.Padding(2);
+			this.comboBox4.Name = "comboBox4";
+			this.comboBox4.Size = new System.Drawing.Size(133, 21);
+			this.comboBox4.TabIndex = 13;
+			// 
+			// comboBox5
+			// 
+			this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBox5.FormattingEnabled = true;
+			this.comboBox5.Location = new System.Drawing.Point(7, 74);
+			this.comboBox5.Margin = new System.Windows.Forms.Padding(2);
+			this.comboBox5.Name = "comboBox5";
+			this.comboBox5.Size = new System.Drawing.Size(133, 21);
+			this.comboBox5.TabIndex = 14;
 			// 
 			// Form1
 			// 
@@ -472,8 +476,6 @@
 		private System.Windows.Forms.TabPage tabPage6;
 		private System.Windows.Forms.TabPage tabPage7;
 		private System.Windows.Forms.TextBox textBox3;
-		private System.Windows.Forms.ComboBox comboBox4;
-		private System.Windows.Forms.ComboBox comboBox5;
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
 		private System.Windows.Forms.TabPage tabPage4;
@@ -481,6 +483,8 @@
 		private System.Windows.Forms.ComboBox comboBox7;
 		private System.Windows.Forms.ComboBox comboBox6;
 		private System.Windows.Forms.Button button6;
+		private System.Windows.Forms.ComboBox comboBox5;
+		private System.Windows.Forms.ComboBox comboBox4;
 	}
 }
 
