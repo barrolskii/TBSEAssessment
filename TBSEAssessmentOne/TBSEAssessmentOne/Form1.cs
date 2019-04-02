@@ -18,12 +18,20 @@ namespace TBSEAssessmentOne
 	{
 		string storeCSVFileLocation;
 		Task t1;
+		Dictionary<string, Store> Stores;
+		ConcurrentQueue<Date> queueDate;
+		ConcurrentQueue<Order> queueOrder;
+
 
 		public Form1()
 		{
 			InitializeComponent();
 
 			t1 = new Task(() => ReadAllData());
+
+			Stores = new Dictionary<string, Store>();
+			queueDate = new ConcurrentQueue<Date>();
+			 queueOrder = new ConcurrentQueue<Order>();
 
 			InitComboBoxes();
 			InitDataGridViewBoxes();
@@ -50,7 +58,7 @@ namespace TBSEAssessmentOne
 			string folderPath = "StoreData";
 			string storeCodesFile = "StoreCodes.csv";
 
-			Dictionary<string, Store> Stores = new Dictionary<string, Store>();
+			//Dictionary<string, Store> Stores = new Dictionary<string, Store>();
 
 			string storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
 			string[] storeList = File.ReadAllLines(storeCodesFilePath);
@@ -72,8 +80,8 @@ namespace TBSEAssessmentOne
 
 			string[] fileNames = Directory.GetFiles(folderPath);
 
-			ConcurrentQueue<Date> queueDate = new ConcurrentQueue<Date>();
-			ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
+			//ConcurrentQueue<Date> queueDate = new ConcurrentQueue<Date>();
+			//ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
 
 			Parallel.ForEach(fileNames, file =>
 			{
@@ -134,11 +142,29 @@ namespace TBSEAssessmentOne
 
 			}));
 
+			comboBox7.Invoke(new Action(() =>
+			{
+				foreach (var s in suppliers)
+				{
+					comboBox7.Items.Add(s);
+				}
+
+			}));
+
+			comboBox8.Invoke(new Action(() =>
+			{
+				foreach (var s in supplierTypes)
+				{
+					comboBox8.Items.Add(s);
+				}
+
+			}));
+
 			#region LINQ and PLINQ testing
 			/* LINQ and PLINQ testing */
 
 			// Total cost of all orders
-			/*double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
+			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
 			Date[] linqDates = (from date in queueDate
 								where date.year == 2013
@@ -152,15 +178,7 @@ namespace TBSEAssessmentOne
 			string supplier = "Surf";
 
 			// Total cost to a supplier and a supplier type
-			double supplierTypeCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
-			double supplierCost = queueOrder.Where(order => order.supplier == supplier).Select(order => order.cost).Sum();
 			double supplierAndTypeCost = queueOrder.Where(order => order.supplier == supplier && order.supplierType == supplierType).Select(order => order.cost).Sum();
-
-
-			// Total cost of all orders in a week for all stores
-			int weekToSearch = 1;
-			double costOfAllOrdersInAWeek = queueOrder.Where(order => order.date.week == weekToSearch).Select(order => order.cost).Sum();
-			// 3724767.44000001
 
 			// Total cost for a supplier type for a store
 			string storeCode = "ABE1";
@@ -177,14 +195,14 @@ namespace TBSEAssessmentOne
 
 
 			// Cost of all orders in a week for a supplier
-			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();*/
+			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();
 
 			/* End of testing section */
 			#endregion
 
 			stopwatch.Stop();
 
-			/*#region Debugging messages
+			#region Debugging messages
 			textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
@@ -192,12 +210,12 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
+			if (comboBox7.Text == "")
+				richTextBox1.Invoke(new Action(() => richTextBox1.Text += "ComboBoxval: " + comboBox7.Text + '\n'));
+
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier type total: " + supplierTypeCost + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier total: " + supplierCost + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier and type total: " + supplierAndTypeCost + '\n'));
 
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of orders in a week: " + costOfAllOrdersInAWeek + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store: " + costForSupplierTypeSingleStore + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store in a week: " + costForSupplierTypeSingleStoreInWeek + '\n'));
 
@@ -206,12 +224,40 @@ namespace TBSEAssessmentOne
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
-			#endregion*/
+			#endregion
 
-			/* Enable combo boxes for search queries*/
+			/* Enable combo boxes for search queries */
 			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
 			comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
 			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
+		}
+
+		private void button6_Click(object sender, EventArgs e)
+		{
+			if (comboBox6.Text != "")
+			{
+				int weekToSearch = Convert.ToInt32(comboBox6.Text);
+				double costOfAllOrdersInAWeek = queueOrder.Where(order => order.date.week == weekToSearch).Select(order => order.cost).Sum();
+
+				richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Total cost: £" + costOfAllOrdersInAWeek + '\n'));
+			}
+
+			if (comboBox7.Text != "")
+			{
+				string supplier = comboBox7.Text;
+				double supplierCost = queueOrder.Where(order => order.supplier == supplier).Select(order => order.cost).Sum();
+
+				richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Total cost: £" + supplierCost + '\n'));
+			}
+
+			if (comboBox8.Text != "")
+			{
+				string supplierType = comboBox8.Text;
+				double supplierTypeCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
+
+
+				richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Total cost: £" + supplierTypeCost + '\n'));
+			}
 		}
 
 		// Function covers total cost for all orders in a week for a store
@@ -271,7 +317,19 @@ namespace TBSEAssessmentOne
 
 		private void button3_Click(object sender, EventArgs e)
 		{
-			string folderPath = "StoreData";
+			Stores.Clear();
+
+			Date date;
+			foreach (var d in queueDate)
+				queueDate.TryDequeue(out date);
+
+			Order order;
+			foreach (var o in queueOrder)
+				queueOrder.TryDequeue(out order);
+
+
+
+			/*string folderPath = "StoreData";
 			string supplierType = "Cleaning";
 			string store = "ABE1";
 			double supplierTotal = 0.0;
@@ -306,7 +364,7 @@ namespace TBSEAssessmentOne
 			stopWatch.Stop();
 
 			richTextBox4.Text += "TimeToLoad: " + stopWatch.Elapsed + '\n';
-			richTextBox4.Text += "Total cost: " + supplierTotal + '\n';
+			richTextBox4.Text += "Total cost: " + supplierTotal + '\n';*/
 		}
 
 		private void button4_Click(object sender, EventArgs e)
@@ -319,8 +377,11 @@ namespace TBSEAssessmentOne
 			CostOfAllOrdersInAWeekForASupplierType();
 			//CostOfAllOrdersForASupplierTypeForAStore();
 			//CostOfAllOrdersInAWeekForASupplierTypeForAStore();
+		}
 
-			//t1.Start();
+		private void button5_Click(object sender, EventArgs e)
+		{
+
 		}
 
 		private void CostOfAllOrdersInAWeekForASupplierTypeForAStore()
@@ -626,9 +687,15 @@ namespace TBSEAssessmentOne
 			comboBox2.Enabled = false;
 			comboBox3.Enabled = false;
 
-			/* Populate the second combo box to have a selection of weeks */
+			/* 
+			 * Populate the second combo box to have a selection of weeks and populate the 
+			 * full store search combo box
+			 */
 			for (int i = 1; i <= 52; i++)
+			{
 				comboBox2.Items.Add(i);
+				comboBox6.Items.Add(i);
+			}
 
 			/*
 			 * Only two years to choose from in the files so this combo box
