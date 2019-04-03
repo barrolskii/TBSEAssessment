@@ -44,9 +44,11 @@ namespace TBSEAssessmentOneConsole
                         break;
 
                     case "3":
+                        CostOfAllOrdersInAWeekForAllStores();
                         break;
 
                     case "4":
+                        CostOfAllOrdersInASingleWeekForAStore();
                         break;
 
                     case "5":
@@ -159,7 +161,36 @@ namespace TBSEAssessmentOneConsole
 
         private static void CostOfAllOrdersInAWeekForAllStores()
         {
+            Console.WriteLine("Please enter the week you want to search");
+            int week = Convert.ToInt32(Console.ReadLine());
 
+            double totalCost = queueOrder.Where(order => order.date.week == week).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost of all orders for week {0}: £{1}", week, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        // TODO: Add a year option for a single store search
+        private static void CostOfAllOrdersInASingleWeekForAStore()
+        {
+            Console.WriteLine("Please enter the week you want to search");
+            int week = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Please enter the store you want to search");
+            string store = Console.ReadLine();
+
+            do
+            {
+                if (Stores.Keys.Contains(store)) break;
+
+                Console.WriteLine("Please enter a correct store code");
+                store = Console.ReadLine();
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.date.week == week && order.store.storeCode == store).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost of all orders for {0} in week {1}: £{2}", store, week, totalCost);
         }
 
         #endregion
