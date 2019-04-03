@@ -384,45 +384,6 @@ namespace TBSEAssessmentOne
 			Order order;
 			foreach (var o in queueOrder)
 				queueOrder.TryDequeue(out order);
-
-
-
-			/*string folderPath = "StoreData";
-			string supplierType = "Cleaning";
-			string store = "ABE1";
-			double supplierTotal = 0.0;
-
-			Stopwatch stopWatch = new Stopwatch();
-			stopWatch.Start();
-
-			string[] fileNames = Directory.GetFiles(folderPath);
-
-
-			foreach (var filePath in fileNames)
-			{
-				string[] splitPath = filePath.Split('_');
-				string[] splitName = splitPath[0].Split('\\');
-				if (splitName[1] == store)
-				{
-					dataGridView2.Rows.Add(splitPath);
-
-					string fileNameExt = Path.GetFileName(filePath);
-					string[] orderData = File.ReadAllLines(folderPath + @"\" + fileNameExt);
-
-					foreach (var orderInfo in orderData)
-					{
-						string[] orderSplit = orderInfo.Split(',');
-						if (orderSplit[1] == supplierType)
-						{
-							supplierTotal += Convert.ToDouble(orderSplit[2]);
-						}
-					}
-				}
-			}
-			stopWatch.Stop();
-
-			richTextBox4.Text += "TimeToLoad: " + stopWatch.Elapsed + '\n';
-			richTextBox4.Text += "Total cost: " + supplierTotal + '\n';*/
 		}
 
 		private void button4_Click(object sender, EventArgs e)
