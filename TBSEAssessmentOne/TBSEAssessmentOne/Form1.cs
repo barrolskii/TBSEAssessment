@@ -58,8 +58,6 @@ namespace TBSEAssessmentOne
 			string folderPath = "StoreData";
 			string storeCodesFile = "StoreCodes.csv";
 
-			//Dictionary<string, Store> Stores = new Dictionary<string, Store>();
-
 			string storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
 			string[] storeList = File.ReadAllLines(storeCodesFilePath);
 
@@ -80,9 +78,6 @@ namespace TBSEAssessmentOne
             }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
-
-			//ConcurrentQueue<Date> queueDate = new ConcurrentQueue<Date>();
-			//ConcurrentQueue<Order> queueOrder = new ConcurrentQueue<Order>();
 
 			Parallel.ForEach(fileNames, file =>
 			{
@@ -175,29 +170,6 @@ namespace TBSEAssessmentOne
 								 where date.year == 2013
 								 select date).ToArray();
 
-			string supplierType = "Cleaning"; // 18940385.4499995
-			string supplier = "Surf";
-
-			// Total cost to a supplier and a supplier type
-			double supplierAndTypeCost = queueOrder.Where(order => order.supplier == supplier && order.supplierType == supplierType).Select(order => order.cost).Sum();
-
-			// Total cost for a supplier type for a store
-			string storeCode = "ABE1";
-			double costForSupplierTypeSingleStore = queueOrder.Where(order => order.store.storeCode == storeCode && order.supplierType == supplierType).Select(order => order.cost).Sum();
-
-
-			// Total cost for a supplier type for a store in a week
-			int week = 1;
-			double costForSupplierTypeSingleStoreInWeek = queueOrder.Where(order => order.store.storeCode == storeCode && order.supplierType == supplierType && order.date.week == week)
-																	.Select(order => order.cost).Sum();
-
-			// Total cost for all orders for a single store
-			double costOfAllOrdersToSingleStore = queueOrder.Where(order => order.store.storeCode == storeCode).Select(order => order.cost).Sum();
-
-
-			// Cost of all orders in a week for a supplier
-			double costOfAllOrdersToASupplierInAWeek = queueOrder.Where(order => order.supplier == supplier && order.date.week == week).Select(order => order.cost).Sum();
-
 			/* End of testing section */
 			#endregion
 
@@ -211,17 +183,8 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
-			if (comboBox7.Text == "")
-				richTextBox1.Invoke(new Action(() => richTextBox1.Text += "ComboBoxval: " + comboBox7.Text + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Supplier and type total: " + supplierAndTypeCost + '\n'));
-
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store: " + costForSupplierTypeSingleStore + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of supplier type for store in a week: " + costForSupplierTypeSingleStoreInWeek + '\n'));
-
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of all orders to a single store: " + costOfAllOrdersToSingleStore + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "\nCost of all orders to a supplier in a week: " + costOfAllOrdersToASupplierInAWeek + '\n'));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
@@ -235,9 +198,6 @@ namespace TBSEAssessmentOne
 
 		private void button5_Click(object sender, EventArgs e)
 		{
-            //string supplierType = "Cleaning";
-            //string supplier = "Surf";
-
             // Supplier
             if (comboBox4.Text != "")
 			{
