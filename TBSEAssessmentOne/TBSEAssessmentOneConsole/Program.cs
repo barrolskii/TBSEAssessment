@@ -20,6 +20,54 @@ namespace TBSEAssessmentOneConsole
         {
             Initalise();
             ReadAllFiles();
+
+            Console.WriteLine("Please select an option");
+            PrintSelectionOptions();
+
+            string input;
+            while ((input = Console.ReadLine()) != "q")
+            {
+                Console.Clear();
+                Console.WriteLine("Please select an option");
+                PrintSelectionOptions();
+
+                switch (input)
+                {
+                    case "1":
+                        TotalCostOfAllOrders();
+                        break;
+
+                    case "2":
+                        break;
+
+                    case "3":
+                        break;
+
+                    case "4":
+                        break;
+
+                    case "5":
+                        break;
+
+                    case "6":
+                        break;
+
+                    case "7":
+                        break;
+
+                    case "8":
+                        break;
+
+                    case "9":
+                        break;
+
+                    default:
+                        Console.WriteLine("Please select a valid option or enter q to quit");
+                        break;
+                }
+            }
+
+            Console.WriteLine("Goodbye");
         }
 
         private static void Initalise()
@@ -27,6 +75,34 @@ namespace TBSEAssessmentOneConsole
             Stores = new Dictionary<string, Store>();
             queueDate = new ConcurrentQueue<Date>();
             queueOrder = new ConcurrentQueue<Order>();
+        }
+
+        private static void CheckCommand(ref string input)
+        {
+
+        }
+
+        private static void PrintSelectionOptions()
+        {
+            Console.WriteLine("===================================================================================");
+
+            Console.WriteLine("1: Total cost of all orders");
+            Console.WriteLine("2: Cost of all orders for a single store");
+            Console.WriteLine("3: Cost of all orders in a week for all stores");
+            Console.WriteLine("4: Cost of all orders in a week for a single store");
+            Console.WriteLine("5: Cost of all orders to a supplier");
+            Console.WriteLine("6: Cost of all orders to a supplier type");
+            Console.WriteLine("7: Cost of orders in a week for a supplier type");
+            Console.WriteLine("8: Cost of orders to a supplier type for a store");
+            Console.WriteLine("9: Cost of orders in a week for a supplier type for a store");
+
+            Console.WriteLine("===================================================================================");
+        }
+
+        private static void TotalCostOfAllOrders()
+        {
+            double totalCost = queueOrder.Sum(order => order.cost);
+            Console.WriteLine("Total cost of all orders is: £{0}", totalCost);
         }
 
         private static void ReadAllFiles()
