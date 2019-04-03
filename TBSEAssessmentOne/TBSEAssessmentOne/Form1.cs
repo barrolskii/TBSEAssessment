@@ -76,7 +76,8 @@ namespace TBSEAssessmentOne
 
 				dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation)));
 				comboBox1.Invoke(new Action(() => comboBox1.Items.Add(newStore.storeCode)));
-			}
+                comboBox10.Invoke(new Action(() => comboBox10.Items.Add(newStore.storeCode)));
+            }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
 
@@ -234,15 +235,54 @@ namespace TBSEAssessmentOne
 
 		private void button5_Click(object sender, EventArgs e)
 		{
-			if (comboBox4.Text != "")
+            //string supplierType = "Cleaning";
+            //string supplier = "Surf";
+
+            // Supplier
+            if (comboBox4.Text != "")
 			{
 
 			}
 
-			if (comboBox5.Text != "")
+            // Supplier type
+			if (comboBox5.Text != "" && comboBox9.Text != "")
 			{
+                int week = Convert.ToInt32(comboBox9.Text);
+                string supplierType = comboBox5.Text;
 
+                double costOfAllOrdersToASupplierTypeInAWeek = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week)
+                                                                         .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week" + costOfAllOrdersToASupplierTypeInAWeek + '\n'));
 			}
+
+            // Week
+            if (comboBox9.Text != "" && comboBox5.Text != "" && comboBox10.Text != "")
+            {
+                string store = comboBox10.Text;
+                string suppliertype = comboBox5.Text;
+                int week = Convert.ToInt32(comboBox9.Text);
+
+                double costOfOrdersInAWeekforASupplierTypeForAStore = queueOrder.Where(order => order.supplierType == suppliertype
+                                                                                       && order.date.week == week
+                                                                                       && order.store.storeCode == store)
+                                                                                 .Select(order => order.cost)
+                                                                                 .Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store" + costOfOrdersInAWeekforASupplierTypeForAStore + '\n'));
+            }
+
+            // Store
+            if (comboBox10.Text != "" && comboBox5.Text != "")
+            {
+                string store = comboBox10.Text;
+                string suppliertype = comboBox5.Text;
+
+                double costOfSupplierTypeForAStore = queueOrder.Where(order => order.supplierType == suppliertype && order.store.storeCode == store)
+                                                               .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost for a store: " + costOfSupplierTypeForAStore+ '\n'));
+            }
 		}
 
 		private void button6_Click(object sender, EventArgs e)
@@ -702,12 +742,13 @@ namespace TBSEAssessmentOne
 
 			/* 
 			 * Populate the second combo box to have a selection of weeks and populate the 
-			 * full store search combo box
+			 * full store search combo box and supplier search combo box
 			 */
 			for (int i = 1; i <= 52; i++)
 			{
 				comboBox2.Items.Add(i);
 				comboBox6.Items.Add(i);
+                comboBox9.Items.Add(i);
 			}
 
 			/*
