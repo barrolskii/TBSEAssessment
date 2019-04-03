@@ -52,12 +52,15 @@ namespace TBSEAssessmentOneConsole
                         break;
 
                     case "5":
+                        CostOfAllOrdersToASupplier();
                         break;
 
                     case "6":
+                        CostOfAllOrdersToASupplierType();
                         break;
 
                     case "7":
+                        CostOfAllOrdersInAWeekToASupplierType();
                         break;
 
                     case "8":
@@ -191,6 +194,58 @@ namespace TBSEAssessmentOneConsole
 
             double totalCost = queueOrder.Where(order => order.date.week == week && order.store.storeCode == store).Select(order => order.cost).Sum();
             Console.WriteLine("Total cost of all orders for {0} in week {1}: £{2}", store, week, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void CostOfAllOrdersToASupplier()
+        {
+            Console.WriteLine("Please enter the supplier you want to search");
+            string supplier = Console.ReadLine();
+
+            double totalCost = queueOrder.Where(order => order.supplier == supplier).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost for {0} orders: £{1}", supplier, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void CostOfAllOrdersToASupplierType()
+        {
+            Console.WriteLine("Please enter the supplier type you want to search");
+            string supplierType = Console.ReadLine();
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost for {0}: £{1}", supplierType, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void CostOfAllOrdersInAWeekToASupplierType()
+        {
+            Console.WriteLine("Please enter the supplier type you want to search");
+            string supplierType = Console.ReadLine();
+
+            Console.WriteLine("Please enter the week you want to search");
+            int week = Convert.ToInt32(Console.ReadLine());
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost for {0} in week {1}: £{2}", supplierType, week, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void CostOfAllOrdersToASupplierTypeForAStore()
+        {
+
+        }
+
+        private static void CostOfAllOrdersInAWeekToASupplierTypeForAStore()
+        {
+
         }
 
         #endregion
