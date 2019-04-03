@@ -20,12 +20,13 @@ namespace TBSEAssessmentOneConsole
         {
             Initalise();
             ReadAllFiles();
+            Console.ReadLine();
 
             string input;
             while (true)
             {
-                //Console.Clear();
-                Console.WriteLine("Please select an option");
+                Console.Clear();
+                Console.WriteLine("Please select an option or type -help for help");
                 PrintSelectionOptions();
                 input = Console.ReadLine();
 
@@ -93,7 +94,7 @@ namespace TBSEAssessmentOneConsole
             {
                 case "-h":
                 case "-help":
-                    // Print list of commands
+                    PrintCommands();
                     break;
 
                 case "-ps":
@@ -102,7 +103,7 @@ namespace TBSEAssessmentOneConsole
                     break;
 
                 case "-pst":
-                case "printsuppliertypes":
+                case "-printsuppliertypes":
                     PrintSupplierTypes();
                     break;
 
@@ -133,12 +134,24 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("===================================================================================");
         }
 
+        private static void PrintCommands()
+        {
+            Console.WriteLine("-h or -help for a list of all commands");
+            Console.WriteLine("-ps or -printstores to print all stores");
+            Console.WriteLine("-pst or -printsuppliertypes to print all supplier types");
+            Console.WriteLine("-psup or -printsuppliers to print all suppliers");
+
+            Console.ReadLine();
+        }
+
         private static void PrintStores()
         {
             foreach (var store in Stores)
             {
                 Console.WriteLine("{0} : {1}", store.Key, store.Value.storeLocation);
             }
+
+            Console.ReadLine();
         }
 
         private static void PrintSuppliers()
@@ -149,6 +162,8 @@ namespace TBSEAssessmentOneConsole
             {
                 Console.WriteLine("{0}", s);
             }
+
+            Console.ReadLine();
         }
 
         private static void PrintSupplierTypes()
@@ -159,6 +174,8 @@ namespace TBSEAssessmentOneConsole
             {
                 Console.WriteLine("{0}", s);
             }
+
+            Console.ReadLine();
         }
 
         #region Assignment required functions
