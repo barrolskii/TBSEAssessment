@@ -21,15 +21,17 @@ namespace TBSEAssessmentOneConsole
             Initalise();
             ReadAllFiles();
 
-            Console.WriteLine("Please select an option");
-            PrintSelectionOptions();
-
             string input;
-            while ((input = Console.ReadLine()) != "q")
+            while (true)
             {
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Please select an option");
                 PrintSelectionOptions();
+                input = Console.ReadLine();
+
+                if (input == "q") break;
+
+                CheckCommand(ref input);
 
                 switch (input)
                 {
@@ -38,6 +40,7 @@ namespace TBSEAssessmentOneConsole
                         break;
 
                     case "2":
+                        CostOfAllOrdersForASingleStore();
                         break;
 
                     case "3":
@@ -79,7 +82,21 @@ namespace TBSEAssessmentOneConsole
 
         private static void CheckCommand(ref string input)
         {
+            switch (input)
+            {
+                case "-h":
+                case "-help":
+                    // Print list of commands
+                    break;
 
+                case "-ps":
+                case "-printstores":
+                    PrintStores();
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         private static void PrintSelectionOptions()
@@ -99,11 +116,53 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("===================================================================================");
         }
 
+        private static void PrintStores()
+        {
+            foreach (var store in Stores)
+            {
+                Console.WriteLine("{0} : {1}", store.Key, store.Value.storeLocation);
+            }
+        }
+
+        #region Assignment required functions
+
         private static void TotalCostOfAllOrders()
         {
             double totalCost = queueOrder.Sum(order => order.cost);
             Console.WriteLine("Total cost of all orders is: £{0}", totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
         }
+
+        private static void CostOfAllOrdersForASingleStore()
+        {
+            Console.WriteLine("Please enter the store you would like to search");
+
+            string store = Console.ReadLine();
+
+            do
+            {
+                if (Stores.Keys.Contains(store)) break;
+
+                Console.WriteLine("Please enter a correct store code");
+                store = Console.ReadLine();
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.store.storeCode == store).Select(order => order.cost).Sum();
+            Console.WriteLine("{0} total order cost: £{1}", store, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
+        }
+
+        private static void CostOfAllOrdersInAWeekForAllStores()
+        {
+
+        }
+
+        #endregion
 
         private static void ReadAllFiles()
         {
