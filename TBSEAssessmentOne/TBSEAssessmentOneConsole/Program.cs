@@ -64,9 +64,11 @@ namespace TBSEAssessmentOneConsole
                         break;
 
                     case "8":
+                        CostOfAllOrdersToASupplierTypeForAStore();
                         break;
 
                     case "9":
+                        CostOfAllOrdersInAWeekToASupplierTypeForAStore();
                         break;
 
                     default:
@@ -143,7 +145,6 @@ namespace TBSEAssessmentOneConsole
         private static void CostOfAllOrdersForASingleStore()
         {
             Console.WriteLine("Please enter the store you would like to search");
-
             string store = Console.ReadLine();
 
             do
@@ -240,12 +241,54 @@ namespace TBSEAssessmentOneConsole
 
         private static void CostOfAllOrdersToASupplierTypeForAStore()
         {
+            Console.WriteLine("Please enter the supplier type you want to search");
+            string supplierType = Console.ReadLine();
 
+            Console.WriteLine("Please enter the store you would like to search");
+            string store = Console.ReadLine();
+
+            do
+            {
+                if (Stores.Keys.Contains(store)) break;
+
+                Console.WriteLine("Please enter a correct store code");
+                store = Console.ReadLine();
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store).Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost for {0} in store {1}: £{2}", supplierType, store, totalCost.ToString("0.00"));
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
         }
 
         private static void CostOfAllOrdersInAWeekToASupplierTypeForAStore()
         {
+            Console.WriteLine("Please enter the supplier type you want to search");
+            string supplierType = Console.ReadLine();
 
+            Console.WriteLine("Please enter the store you would like to search");
+            string store = Console.ReadLine();
+
+            do
+            {
+                if (Stores.Keys.Contains(store)) break;
+
+                Console.WriteLine("Please enter a correct store code");
+                store = Console.ReadLine();
+            }
+            while (true);
+
+            Console.WriteLine("Please enter the week you want to search");
+            int week = Convert.ToInt32(Console.ReadLine());
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store && order.date.week == week)
+                                         .Select(order => order.cost).Sum();
+            Console.WriteLine("Total cost for {0} in store {1} for week {2}: £{3}", supplierType, store, week, totalCost);
+
+            Console.WriteLine("\nPress any key to continue");
+            Console.ReadLine();
         }
 
         #endregion
