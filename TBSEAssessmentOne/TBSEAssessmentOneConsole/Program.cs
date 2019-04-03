@@ -101,6 +101,16 @@ namespace TBSEAssessmentOneConsole
                     PrintStores();
                     break;
 
+                case "-pst":
+                case "printsuppliertypes":
+                    PrintSupplierTypes();
+                    break;
+
+                case "-psup":
+                case "-printsuppliers":
+                    PrintSuppliers();
+                    break;
+
                 default:
                     break;
             }
@@ -128,6 +138,36 @@ namespace TBSEAssessmentOneConsole
             foreach (var store in Stores)
             {
                 Console.WriteLine("{0} : {1}", store.Key, store.Value.storeLocation);
+            }
+        }
+
+        private static void PrintSuppliers()
+        {
+            List<string> suppliers = new List<string>();
+            foreach (var st in queueOrder)
+            {
+                if (!suppliers.Contains(st.supplier))
+                    suppliers.Add(st.supplier);
+            }
+
+            foreach (string s in suppliers)
+            {
+                Console.WriteLine("{0}", s);
+            }
+        }
+
+        private static void PrintSupplierTypes()
+        {
+            List<string> supplierTypes = new List<string>();
+            foreach (var st in queueOrder)
+            {
+                if (!supplierTypes.Contains(st.supplierType))
+                    supplierTypes.Add(st.supplierType);
+            }
+
+            foreach (string s in supplierTypes)
+            {
+                Console.WriteLine("{0}", s);
             }
         }
 
