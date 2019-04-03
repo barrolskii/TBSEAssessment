@@ -143,12 +143,7 @@ namespace TBSEAssessmentOneConsole
 
         private static void PrintSuppliers()
         {
-            List<string> suppliers = new List<string>();
-            foreach (var st in queueOrder)
-            {
-                if (!suppliers.Contains(st.supplier))
-                    suppliers.Add(st.supplier);
-            }
+            string[] suppliers = queueOrder.Select(order => order.supplier).Distinct().ToArray();
 
             foreach (string s in suppliers)
             {
@@ -158,12 +153,7 @@ namespace TBSEAssessmentOneConsole
 
         private static void PrintSupplierTypes()
         {
-            List<string> supplierTypes = new List<string>();
-            foreach (var st in queueOrder)
-            {
-                if (!supplierTypes.Contains(st.supplierType))
-                    supplierTypes.Add(st.supplierType);
-            }
+            string[] supplierTypes = queueOrder.Select(order => order.supplierType).Distinct().ToArray();
 
             foreach (string s in supplierTypes)
             {
