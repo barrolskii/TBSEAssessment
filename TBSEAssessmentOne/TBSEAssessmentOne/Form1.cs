@@ -108,25 +108,50 @@ namespace TBSEAssessmentOne
 			});
 
 
-			List<string> suppliers = new List<string>();
-			List<string> supplierTypes = new List<string>();
+            //List<string> suppliers = new List<string>();
+            //List<string> supplierTypes = new List<string>();
 
-			foreach(var order in queueOrder)
+            string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
+            string[] supplierTypes = queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToArray();
+
+            /*foreach(var order in queueOrder)
 			{
 				if (!suppliers.Contains(order.supplier))
 					suppliers.Add(order.supplier);
 
 				if (!supplierTypes.Contains(order.supplierType))
 					supplierTypes.Add(order.supplierType);
-			}
+			}*/
 
             Stopwatch tsw = new Stopwatch();
-            tsw.Start();
+            tsw.Start(); // 00:00:00.0007343
 
-            comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers.ToArray()); }));
-            comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes.ToArray()); }));
-            comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers.ToArray()); }));
-            comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes.ToArray()); }));
+            TaskFactory TF = new TaskFactory(TaskScheduler.Default);
+
+            List<Task> TL = new List<Task>();
+
+            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox4, suppliers),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox5, supplierTypes),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox7, suppliers),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox8, supplierTypes),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            Task.WaitAll(TL.ToArray());
+
+            /*comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers); }));
+            comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes); }));
+            comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers); }));
+            comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes); }));*/
 
             tsw.Stop();
             richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
@@ -170,6 +195,11 @@ namespace TBSEAssessmentOne
 			comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
 			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
 		}
+
+        private void InvokeComboBox(ComboBox comboBox, string[] items)
+        {
+            comboBox.Invoke(new Action(() => comboBox.Items.AddRange(items)));
+        }
 
 		private void button5_Click(object sender, EventArgs e)
 		{
