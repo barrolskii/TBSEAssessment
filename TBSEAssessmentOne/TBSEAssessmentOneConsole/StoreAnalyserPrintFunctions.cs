@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace TBSEAssessmentOneConsole
 {
@@ -48,7 +49,13 @@ namespace TBSEAssessmentOneConsole
 
         private void PrintSuppliers()
         {
-            string[] suppliers = queueOrder.Select(order => order.supplier).Distinct().ToArray();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
+
+            sw.Stop();
+            Console.WriteLine("Time: {0}", sw.Elapsed);
 
             foreach (string s in suppliers)
             {
