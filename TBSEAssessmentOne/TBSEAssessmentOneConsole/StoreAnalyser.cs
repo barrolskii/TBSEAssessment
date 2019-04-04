@@ -24,11 +24,19 @@ namespace TBSEAssessmentOneConsole
 
         public void ReadAllFiles()
         {
+            // Exact folder path for copy paste
+            // C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
+
             string folderPath = "StoreData";
             string storeCodesFile = "StoreCodes.csv";
 
-            //string storeCodesFilePath = Directory.GetCurrentDirectory() + @"\" + storeCodesFile;
-            string storeCodesFilePath = @"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\" + storeCodesFile;
+            Console.WriteLine("Please enter the path to the store data");
+            string storeCodesFilePath = Console.ReadLine();
+
+            string storesFolderPath = storeCodesFilePath + "\\" + folderPath;
+            storeCodesFilePath += "\\" + storeCodesFile;
+
+
             string[] storeList = File.ReadAllLines(storeCodesFilePath);
 
             Stopwatch stopwatch = new Stopwatch();
@@ -45,8 +53,7 @@ namespace TBSEAssessmentOneConsole
             }
 
 
-            //string[] fileNames = Directory.GetFiles(folderPath);
-            string[] fileNames = Directory.GetFiles(@"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\" + folderPath);
+            string[] fileNames = Directory.GetFiles(storesFolderPath);
 
             // Start populating the queues
             Parallel.ForEach(fileNames, file =>
@@ -93,7 +100,7 @@ namespace TBSEAssessmentOneConsole
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Please select an option or type -help for help");
+                Console.WriteLine("Please select an option or type -help for help\n");
 
                 PrintSelectionOptions();
                 input = Console.ReadLine();
@@ -101,8 +108,6 @@ namespace TBSEAssessmentOneConsole
                 if (input == "q") break;
 
                 CheckCommand(ref input);
-
-
             }
 
             Console.WriteLine("Goodbye");

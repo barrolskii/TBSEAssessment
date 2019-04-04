@@ -29,10 +29,14 @@ namespace TBSEAssessmentOneConsole
 
         private void PrintCommands()
         {
+            Console.WriteLine("\n===================================================================================");
+
             Console.WriteLine("-h or -help for a list of all commands");
             Console.WriteLine("-ps or -printstores to print all stores");
             Console.WriteLine("-pst or -printsuppliertypes to print all supplier types");
             Console.WriteLine("-psup or -printsuppliers to print all suppliers");
+
+            Console.WriteLine("===================================================================================");
 
             Console.ReadLine();
         }
