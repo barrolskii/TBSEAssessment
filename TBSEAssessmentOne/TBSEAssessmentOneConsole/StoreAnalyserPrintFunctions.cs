@@ -49,13 +49,7 @@ namespace TBSEAssessmentOneConsole
 
         private void PrintSuppliers()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
-
-            sw.Stop();
-            Console.WriteLine("Time: {0}", sw.Elapsed);
 
             foreach (string s in suppliers)
             {
@@ -67,7 +61,7 @@ namespace TBSEAssessmentOneConsole
 
         private void PrintSupplierTypes()
         {
-            string[] supplierTypes = queueOrder.Select(order => order.supplierType).Distinct().ToArray();
+            string[] supplierTypes = queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToArray();
 
             foreach (string s in supplierTypes)
             {
