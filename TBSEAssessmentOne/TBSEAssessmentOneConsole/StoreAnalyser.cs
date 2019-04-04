@@ -30,14 +30,32 @@ namespace TBSEAssessmentOneConsole
             string folderPath = "StoreData";
             string storeCodesFile = "StoreCodes.csv";
 
-            Console.WriteLine("Please enter the path to the store data");
-            string storeCodesFilePath = Console.ReadLine();
+            string storeCodesFilePath;
+            string storesFolderPath;
+            do
+            {
+                Console.WriteLine("Please enter the path to the store data");
+                storeCodesFilePath = Console.ReadLine();
 
-            string storesFolderPath = storeCodesFilePath + "\\" + folderPath;
-            storeCodesFilePath += "\\" + storeCodesFile;
+                storesFolderPath = storeCodesFilePath + "\\" + folderPath;
+                storeCodesFilePath += "\\" + storeCodesFile;
 
+
+                if (!File.Exists(storeCodesFilePath))
+                {
+                    Console.WriteLine("File not found in current directory. Please enter the correct directory path");
+                }
+                else if (!Directory.Exists(storesFolderPath))
+                {
+                    Console.WriteLine("Folder for store data not found in current directory. Please enter the correct directory path");
+                }
+                else
+                    break;
+            }
+            while (true);
 
             string[] storeList = File.ReadAllLines(storeCodesFilePath);
+
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -91,6 +109,7 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("Queue count: {0} \n", queueDate.Count);
             Console.WriteLine("Queue order count: {0} \n", queueOrder.Count);
 
+            Console.WriteLine("Data loaded successfully. Press enter to continue");
             Console.ReadLine();
         }
 
