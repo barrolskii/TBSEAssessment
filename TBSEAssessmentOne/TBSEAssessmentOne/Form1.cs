@@ -120,47 +120,22 @@ namespace TBSEAssessmentOne
 					supplierTypes.Add(order.supplierType);
 			}
 
-			comboBox4.Invoke(new Action(() => 
-			{
-				foreach (var s in suppliers)
-				{
-					comboBox4.Items.Add(s);
-				}
-					
-			}));
+            Stopwatch tsw = new Stopwatch();
+            tsw.Start();
 
-			comboBox5.Invoke(new Action(() =>
-			{
-				foreach (var s in supplierTypes)
-				{
-					comboBox5.Items.Add(s);
-				}
+            comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers.ToArray()); }));
+            comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes.ToArray()); }));
+            comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers.ToArray()); }));
+            comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes.ToArray()); }));
 
-			}));
+            tsw.Stop();
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
 
-			comboBox7.Invoke(new Action(() =>
-			{
-				foreach (var s in suppliers)
-				{
-					comboBox7.Items.Add(s);
-				}
+            #region LINQ and PLINQ testing
+            /* LINQ and PLINQ testing */
 
-			}));
-
-			comboBox8.Invoke(new Action(() =>
-			{
-				foreach (var s in supplierTypes)
-				{
-					comboBox8.Items.Add(s);
-				}
-
-			}));
-
-			#region LINQ and PLINQ testing
-			/* LINQ and PLINQ testing */
-
-			// Total cost of all orders
-			double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
+            // Total cost of all orders
+            double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
 			Date[] linqDates = (from date in queueDate
 								where date.year == 2013
