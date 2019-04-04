@@ -115,11 +115,22 @@ namespace TBSEAssessmentOneConsole
             Console.ReadLine();
         }
 
-        // TODO: Add a year option for a single store search
         private void CostOfAllOrdersInASingleWeekForAStore()
         {
             Console.WriteLine("Please enter the week you want to search");
             int week = Convert.ToInt32(Console.ReadLine());
+
+            do
+            {
+                if (week < 1 || week > 52)
+                {
+                    Console.WriteLine("Please enter a week from 1 - 52");
+                    week = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
 
             Console.WriteLine("Please enter the store you want to search");
             string store = Console.ReadLine();
@@ -133,7 +144,22 @@ namespace TBSEAssessmentOneConsole
             }
             while (true);
 
-            double totalCost = queueOrder.Where(order => order.date.week == week && order.store.storeCode == store).Select(order => order.cost).Sum();
+            Console.WriteLine("Enter the year you would like to search");
+            int year = Convert.ToInt32(Console.ReadLine());
+
+            do
+            {
+                if (year < 2013 || year > 2014)
+                {
+                    Console.WriteLine("Please enter a valid year");
+                    year = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.date.week == week && order.store.storeCode == store && order.date.year == year).Select(order => order.cost).Sum();
             Console.WriteLine("Total cost of all orders for {0} in week {1}: £{2}", store, week, totalCost);
 
             Console.WriteLine("\nPress any key to continue");
@@ -172,7 +198,36 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("Please enter the week you want to search");
             int week = Convert.ToInt32(Console.ReadLine());
 
-            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week).Select(order => order.cost).Sum();
+            do
+            {
+                if (week < 1 || week > 52)
+                {
+                    Console.WriteLine("Please enter a week from 1 - 52");
+                    week = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
+
+            Console.WriteLine("Enter the year you would like to search");
+            int year = Convert.ToInt32(Console.ReadLine());
+
+            do
+            {
+                if (year < 2013 || year > 2014)
+                {
+                    Console.WriteLine("Please enter a valid year");
+                    year = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.date.year == year)
+                                         .Select(order => order.cost).Sum();
+
             Console.WriteLine("Total cost for {0} in week {1}: £{2}", supplierType, week, totalCost);
 
             Console.WriteLine("\nPress any key to continue");
@@ -223,7 +278,34 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("Please enter the week you want to search");
             int week = Convert.ToInt32(Console.ReadLine());
 
-            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store && order.date.week == week)
+            do
+            {
+                if (week < 1 || week > 52)
+                {
+                    Console.WriteLine("Please enter a week from 1 - 52");
+                    week = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
+
+            Console.WriteLine("Enter the year you would like to search");
+            int year = Convert.ToInt32(Console.ReadLine());
+
+            do
+            {
+                if (year < 2013 || year > 2014)
+                {
+                    Console.WriteLine("Please enter a valid year");
+                    year = Convert.ToInt32(Console.ReadLine());
+                }
+                else
+                    break;
+            }
+            while (true);
+
+            double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store && order.date.week == week && order.date.year == year)
                                          .Select(order => order.cost).Sum();
             Console.WriteLine("Total cost for {0} in store {1} for week {2}: £{3}", supplierType, store, week, totalCost);
 
@@ -232,6 +314,5 @@ namespace TBSEAssessmentOneConsole
         }
 
         #endregion
-
     }
 }
