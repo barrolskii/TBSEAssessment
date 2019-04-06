@@ -129,26 +129,55 @@ namespace TBSEAssessmentOne
 
             #region Task Factory Test
 
-            Stopwatch tsw = new Stopwatch(); // 00:00:00.8459063 for task factory
-            tsw.Start(); // 00:00:00.0007343
+            Stopwatch tsw = new Stopwatch();
+            tsw.Start();
 
             TaskFactory TF = new TaskFactory(TaskScheduler.Default);
 
             List<Task> TL = new List<Task>();
 
-            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox4, suppliers),
+            List<string> comboBoxStoreList = new List<string> { "" };
+            comboBoxStoreList.AddRange(Stores.Keys.ToList());
+
+
+            TL.Add(TF.StartNew(() => comboBox1.Invoke(new Action(() => comboBox1.DataSource = comboBoxStoreList)),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox5, supplierTypes),
+            List<string> comboBoxSuppliersList = new List<string> { "" };
+            comboBoxSuppliersList.AddRange(suppliers.ToList());
+
+            List<string> comboBoxSupplierTypeList = new List<string> { "" };
+            comboBoxSupplierTypeList.AddRange(supplierTypes.ToList());
+
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, comboBoxSuppliersList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox7, suppliers),
+            /*TL.Add(TF.StartNew(() => InvokeComboBox(comboBox4, suppliers),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default)); */
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, comboBoxSupplierTypeList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            TL.Add(TF.StartNew(() => InvokeComboBox(comboBox8, supplierTypes),
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox7, comboBoxSuppliersList),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox8, comboBoxSupplierTypeList),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox10, comboBoxStoreList),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox11, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
@@ -188,8 +217,8 @@ namespace TBSEAssessmentOne
 
 			stopwatch.Stop();
 
-			#region Debugging messages
-			/*textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
+            #region Debugging messages
+            textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
@@ -197,23 +226,30 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
 
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));*/
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
 
-			#endregion
+            #endregion
 
-			/* Enable combo boxes for search queries */
-			/*comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
-			comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
-			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));*/
+            /* Enable combo boxes for search queries */
+            comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
+            comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
+            comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
 
-            comboBox12.DataSource = comboBox9.Items;
-            comboBox11.DataSource = comboBox10.Items;
+           // comboBox12.DataSource = comboBox9.Items;
+           // comboBox11.DataSource = comboBox10.Items;
         }
 
         // TODO: rework the code that this calls because this might not even be needed
         private void InvokeComboBox(ComboBox comboBox, string[] items)
         {
             comboBox.Invoke(new Action(() => comboBox.Items.AddRange(items)));
+        }
+
+        private void SetComboboxData(ComboBox cb, List<string> items)
+        {
+            string[] data = items.ToArray();
+
+            cb.DataSource = data;
         }
 
         private void Test()
@@ -399,6 +435,8 @@ namespace TBSEAssessmentOne
 				comboBox2.Items.Add(i);
 				comboBox6.Items.Add(i);
                 comboBox9.Items.Add(i);
+                comboBox9.Items.Add(i);
+                comboBox12.Items.Add(i);
 			}
 
 			/*
@@ -443,15 +481,18 @@ namespace TBSEAssessmentOne
         {
             string store = comboBox1.Text;
 
-            double costOfAllOrdersToAStore = queueOrder.Where(order => order.store.storeCode == store)
-                                                       .Select(order => order.cost)
-                                                       .Sum();
+            if (store != "")
+            {
+                double costOfAllOrdersToAStore = queueOrder.Where(order => order.store.storeCode == store)
+                                                         .Select(order => order.cost)
+                                                         .Sum();
 
-            double test = queueOrder.AsParallel().Where(order => order.store.storeCode == store)
-                                                 .Select(order => order.cost).Sum();
+                double test = queueOrder.AsParallel().Where(order => order.store.storeCode == store)
+                                                     .Select(order => order.cost).Sum();
 
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + costOfAllOrdersToAStore + "\n"));
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + test + "\n"));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + costOfAllOrdersToAStore + "\n"));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + test + "\n"));
+            }
         }
 
         private void comboBox6_TextChanged(object sender, EventArgs e)
