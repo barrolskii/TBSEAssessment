@@ -87,10 +87,6 @@ namespace TBSEAssessmentOne
 				Store newStore = new Store { storeCode = splitStoreData[0], storeLocation = splitStoreData[1] };
 				if (!Stores.ContainsKey(newStore.storeCode))
 					Stores.Add(newStore.storeCode, newStore);
-
-				/*dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation)));
-				comboBox1.Invoke(new Action(() => comboBox1.Items.Add(newStore.storeCode)));
-                comboBox10.Invoke(new Action(() => comboBox10.Items.Add(newStore.storeCode)));*/
             }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
@@ -155,10 +151,6 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            /*TL.Add(TF.StartNew(() => InvokeComboBox(comboBox4, suppliers),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default)); */
-
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, comboBoxSupplierTypeList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
@@ -181,11 +173,8 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            /*TL.Add(TF.StartNew(() => InvokeDataGrid(dataGridView1, Stores),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));*/
 
-            TL.Add(TF.StartNew(() => Test(),
+            TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
@@ -234,15 +223,6 @@ namespace TBSEAssessmentOne
             comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
             comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
             comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
-
-           // comboBox12.DataSource = comboBox9.Items;
-           // comboBox11.DataSource = comboBox10.Items;
-        }
-
-        // TODO: rework the code that this calls because this might not even be needed
-        private void InvokeComboBox(ComboBox comboBox, string[] items)
-        {
-            comboBox.Invoke(new Action(() => comboBox.Items.AddRange(items)));
         }
 
         private void SetComboboxData(ComboBox cb, List<string> items)
@@ -252,25 +232,12 @@ namespace TBSEAssessmentOne
             cb.DataSource = data;
         }
 
-        private void Test()
+        private void SetDataGridViewDatasource(DataGridView dgv, List<Store> data)
         {
             List<Store> list = new List<Store>();
-            list.AddRange(Stores.Values.ToList());
+            list.AddRange(data);
 
-            dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = list));
-        }
-
-        private void InvokeRichTextBox(RichTextBox rtc, string item)
-        {
-            rtc.Invoke(new Action(() => rtc.Text += item + '\n'));
-        }
-
-        private void InvokeDataGrid(DataGridView dgv, Dictionary<string, Store> stores)
-        {
-            foreach(var s in stores)
-            {
-                dgv.Invoke(new Action(() => dgv.Rows.Add(s.Key, s.Value.storeLocation)));
-            }
+            dgv.Invoke(new Action(() => dgv.DataSource = list));
         }
 
 		private void button5_Click(object sender, EventArgs e)
@@ -407,6 +374,7 @@ namespace TBSEAssessmentOne
 			richTextBox1.Text += "Total cost: " + totalCost + '\n'; // 22440.79
 		}
 
+        /* Test button for temp function implementation */
 		private void button4_Click(object sender, EventArgs e)
 		{
 
