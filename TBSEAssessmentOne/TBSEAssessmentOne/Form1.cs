@@ -123,6 +123,15 @@ namespace TBSEAssessmentOne
             string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
             string[] supplierTypes = queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToArray();
 
+            List<string> comboBoxStoreList = new List<string> { "" };
+            comboBoxStoreList.AddRange(Stores.Keys.ToList());
+
+            List<string> comboBoxSuppliersList = new List<string> { "" };
+            comboBoxSuppliersList.AddRange(suppliers.ToList());
+
+            List<string> comboBoxSupplierTypeList = new List<string> { "" };
+            comboBoxSupplierTypeList.AddRange(supplierTypes.ToList());
+
             #region Task Factory Test
 
             Stopwatch tsw = new Stopwatch();
@@ -132,20 +141,10 @@ namespace TBSEAssessmentOne
 
             List<Task> TL = new List<Task>();
 
-            List<string> comboBoxStoreList = new List<string> { "" };
-            comboBoxStoreList.AddRange(Stores.Keys.ToList());
-
 
             TL.Add(TF.StartNew(() => comboBox1.Invoke(new Action(() => comboBox1.DataSource = comboBoxStoreList)),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
-
-            List<string> comboBoxSuppliersList = new List<string> { "" };
-            comboBoxSuppliersList.AddRange(suppliers.ToList());
-
-            List<string> comboBoxSupplierTypeList = new List<string> { "" };
-            comboBoxSupplierTypeList.AddRange(supplierTypes.ToList());
-
 
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, comboBoxSuppliersList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
@@ -163,37 +162,20 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox10, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
-
 
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox11, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-
             TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
+
             Task.WaitAll(TL.ToArray());
-
-             /*comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers); }));
-             comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes); }));
-             comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers); }));
-             comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes); }));
-
-            List<Store>list = new List<Store>();
-            list.AddRange(Stores.Values.ToList());
-
-            dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = list));*/
-            
-            /*foreach (var s in Stores)
-            {
-                dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(s.Key, s.Value.storeLocation)));
-            }*/
 
             tsw.Stop();
             richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
@@ -203,7 +185,7 @@ namespace TBSEAssessmentOne
             // Total cost of all orders
             double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
-
+           
 			stopwatch.Stop();
 
             #region Debugging messages
@@ -223,6 +205,9 @@ namespace TBSEAssessmentOne
             comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
             comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
             comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
+
+            dataGridView1.Invoke(new Action(() => dataGridView1.Columns[0].HeaderText = "Store Code"));
+            dataGridView1.Columns[1].HeaderText = "Store Location";
         }
 
         private void SetComboboxData(ComboBox cb, List<string> items)
@@ -391,8 +376,10 @@ namespace TBSEAssessmentOne
              * Add empty string options for the combo boxes so the user can leave specific
              * search fields blank
              */
+            comboBox6.Items.Add("");
             comboBox9.Items.Add("");
             comboBox10.Items.Add("");
+            comboBox12.Items.Add("");
 
             /* 
 			 * Populate the second combo box to have a selection of weeks and populate the 
@@ -402,7 +389,6 @@ namespace TBSEAssessmentOne
 			{
 				comboBox2.Items.Add(i);
 				comboBox6.Items.Add(i);
-                comboBox9.Items.Add(i);
                 comboBox9.Items.Add(i);
                 comboBox12.Items.Add(i);
 			}
@@ -430,10 +416,6 @@ namespace TBSEAssessmentOne
 
 		private void InitDataGridViewBoxes()
 		{
-			//dataGridView1.ColumnCount = 2;
-			//dataGridView1.Columns[0].Name = "StoreCode";
-			//dataGridView1.Columns[1].Name = "StoreName";
-
 			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
 
