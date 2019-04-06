@@ -33,21 +33,6 @@ namespace TBSEAssessmentOne
 
 			InitComboBoxes();
 			InitDataGridViewBoxes();
-
-            comboBox11.Hide();
-
-            // Hide the supplier search combo boxes and buttons until relevant data is added
-            comboBox9.Hide();
-            comboBox10.Hide();
-            label6.Hide();
-            label7.Hide();
-            button5.Hide();
-
-            comboBox11.Hide();
-            comboBox12.Hide();
-            label11.Hide();
-            label12.Hide();
-            button6.Hide();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -80,6 +65,8 @@ namespace TBSEAssessmentOne
 
 				t1.Start();
 			}
+
+            richTextBox1.Text += "Finished method\n";
         }
 
         private void ReadAllData()
@@ -101,9 +88,9 @@ namespace TBSEAssessmentOne
 				if (!Stores.ContainsKey(newStore.storeCode))
 					Stores.Add(newStore.storeCode, newStore);
 
-				dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation)));
+				/*dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(newStore.storeCode, newStore.storeLocation)));
 				comboBox1.Invoke(new Action(() => comboBox1.Items.Add(newStore.storeCode)));
-                comboBox10.Invoke(new Action(() => comboBox10.Items.Add(newStore.storeCode)));
+                comboBox10.Invoke(new Action(() => comboBox10.Items.Add(newStore.storeCode)));*/
             }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
@@ -140,8 +127,9 @@ namespace TBSEAssessmentOne
             string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
             string[] supplierTypes = queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToArray();
 
+            #region Task Factory Test
 
-            Stopwatch tsw = new Stopwatch();
+            Stopwatch tsw = new Stopwatch(); // 00:00:00.8459063 for task factory
             tsw.Start(); // 00:00:00.0007343
 
             TaskFactory TF = new TaskFactory(TaskScheduler.Default);
@@ -164,37 +152,44 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
+            /*TL.Add(TF.StartNew(() => InvokeDataGrid(dataGridView1, Stores),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));*/
+
+            TL.Add(TF.StartNew(() => Test(),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
             Task.WaitAll(TL.ToArray());
 
-            /*comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers); }));
-            comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes); }));
-            comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers); }));
-            comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes); }));*/
+             /*comboBox4.Invoke(new Action(() => { comboBox4.Items.AddRange(suppliers); }));
+             comboBox5.Invoke(new Action(() => { comboBox5.Items.AddRange(supplierTypes); }));
+             comboBox7.Invoke(new Action(() => { comboBox7.Items.AddRange(suppliers); }));
+             comboBox8.Invoke(new Action(() => { comboBox8.Items.AddRange(supplierTypes); }));
+
+            List<Store>list = new List<Store>();
+            list.AddRange(Stores.Values.ToList());
+
+            dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = list));*/
+            
+            /*foreach (var s in Stores)
+            {
+                dataGridView1.Invoke(new Action(() => dataGridView1.Rows.Add(s.Key, s.Value.storeLocation)));
+            }*/
 
             tsw.Stop();
             richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
+            #endregion 
 
-            #region LINQ and PLINQ testing
-            /* LINQ and PLINQ testing */
 
             // Total cost of all orders
             double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
 
-			Date[] linqDates = (from date in queueDate
-								where date.year == 2013
-								select date).ToArray();
-
-			Date[] plinqDates = (from date in queueDate.AsParallel()
-								 where date.year == 2013
-								 select date).ToArray();
-
-			/* End of testing section */
-			#endregion
 
 			stopwatch.Stop();
 
 			#region Debugging messages
-			textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
+			/*textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
@@ -202,16 +197,14 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
 
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));*/
 
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + linqDates.Length + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total 2013 dates: " + plinqDates.Length + '\n'));
 			#endregion
 
 			/* Enable combo boxes for search queries */
-			comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
+			/*comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
 			comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
-			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
+			comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));*/
 
             comboBox12.DataSource = comboBox9.Items;
             comboBox11.DataSource = comboBox10.Items;
@@ -221,6 +214,27 @@ namespace TBSEAssessmentOne
         private void InvokeComboBox(ComboBox comboBox, string[] items)
         {
             comboBox.Invoke(new Action(() => comboBox.Items.AddRange(items)));
+        }
+
+        private void Test()
+        {
+            List<Store> list = new List<Store>();
+            list.AddRange(Stores.Values.ToList());
+
+            dataGridView1.Invoke(new Action(() => dataGridView1.DataSource = list));
+        }
+
+        private void InvokeRichTextBox(RichTextBox rtc, string item)
+        {
+            rtc.Invoke(new Action(() => rtc.Text += item + '\n'));
+        }
+
+        private void InvokeDataGrid(DataGridView dgv, Dictionary<string, Store> stores)
+        {
+            foreach(var s in stores)
+            {
+                dgv.Invoke(new Action(() => dgv.Rows.Add(s.Key, s.Value.storeLocation)));
+            }
         }
 
 		private void button5_Click(object sender, EventArgs e)
@@ -357,20 +371,6 @@ namespace TBSEAssessmentOne
 			richTextBox1.Text += "Total cost: " + totalCost + '\n'; // 22440.79
 		}
 
-
-		private void button3_Click(object sender, EventArgs e)
-		{
-			Stores.Clear();
-
-			Date date;
-			foreach (var d in queueDate)
-				queueDate.TryDequeue(out date);
-
-			Order order;
-			foreach (var o in queueOrder)
-				queueOrder.TryDequeue(out order);
-		}
-
 		private void button4_Click(object sender, EventArgs e)
 		{
 
@@ -407,13 +407,26 @@ namespace TBSEAssessmentOne
 			 */
 			comboBox3.Items.Add(2013);
 			comboBox3.Items.Add(2014);
-		}
+
+            // Hide the supplier search combo boxes and buttons until relevant data is added
+            comboBox9.Hide();
+            comboBox10.Hide();
+            label6.Hide();
+            label7.Hide();
+            button5.Hide();
+
+            comboBox11.Hide();
+            comboBox12.Hide();
+            label11.Hide();
+            label12.Hide();
+            button6.Hide();
+        }
 
 		private void InitDataGridViewBoxes()
 		{
-			dataGridView1.ColumnCount = 2;
-			dataGridView1.Columns[0].Name = "StoreCode";
-			dataGridView1.Columns[1].Name = "StoreName";
+			//dataGridView1.ColumnCount = 2;
+			//dataGridView1.Columns[0].Name = "StoreCode";
+			//dataGridView1.Columns[1].Name = "StoreName";
 
 			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
