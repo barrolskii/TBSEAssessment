@@ -141,7 +141,6 @@ namespace TBSEAssessmentOne
 
             List<Task> TL = new List<Task>();
 
-
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox1, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
@@ -174,13 +173,11 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-
             Task.WaitAll(TL.ToArray());
 
             tsw.Stop();
             richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
             #endregion 
-
 
             // Total cost of all orders
             double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
@@ -198,7 +195,9 @@ namespace TBSEAssessmentOne
 
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs.ToString("0.00") + '\n'));
-
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox1.Items.Count + '\n'));
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox10.Items.Count + '\n'));
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox11.Items.Count + '\n'));
             #endregion
 
             /* Enable combo boxes for search queries */
@@ -214,7 +213,7 @@ namespace TBSEAssessmentOne
         {
             string[] data = items.ToArray();
 
-            cb.DataSource = data;
+            cb.Invoke(new Action(() => cb.DataSource = data));
         }
 
         private void SetDataGridViewDatasource(DataGridView dgv, List<Store> data)
@@ -310,7 +309,7 @@ namespace TBSEAssessmentOne
 		{
 			double totalCost = 0;
 
-			Dictionary<string, double> SupplierCost = new Dictionary<string, double>();
+			Dictionary<string, double> SupplierTypeCost = new Dictionary<string, double>();
 
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
@@ -332,20 +331,25 @@ namespace TBSEAssessmentOne
 				dataGridView2.Rows.Add(orderSplit[0], orderSplit[1], orderSplit[2]);
 				totalCost += Convert.ToDouble(orderSplit[2]);
 
-				if (!SupplierCost.Keys.Contains(orderSplit[0]))
+				if (!SupplierTypeCost.Keys.Contains(orderSplit[1]))
 				{
-					SupplierCost.Add(orderSplit[0], Convert.ToDouble(orderSplit[2]));
+					SupplierTypeCost.Add(orderSplit[1], Convert.ToDouble(orderSplit[2]));
 				}
 				else
 				{
-					SupplierCost[orderSplit[0]] += Convert.ToDouble(orderSplit[2]);
+                    SupplierTypeCost[orderSplit[1]] += Convert.ToDouble(orderSplit[2]);
 				}
 			}
 
-			foreach (var s in SupplierCost)
+            chart1.Titles.Add("Title");
+
+            chart1.Series.Clear();
+
+            foreach (var s in SupplierTypeCost)
 			{
 				chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
-			}
+                chart1.Series["Supplier costs"].Label = "";
+            }
 
 			textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
 
