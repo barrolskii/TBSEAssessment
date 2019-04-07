@@ -36,6 +36,9 @@ namespace TBSEAssessmentOne
 			InitDataGridViewBoxes();
 
             chart1.Hide();
+            chart2.Hide();
+            chart3.Hide();
+
             toolTip = new ToolTip();
         }
 
@@ -94,7 +97,7 @@ namespace TBSEAssessmentOne
             }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
-            progressBar1.Maximum = fileNames.Length;
+            progressBar1.Invoke(new Action(() => progressBar1.Maximum = fileNames.Length));
             int loadingBarProgress = 0;
 
 			Parallel.ForEach(fileNames, file =>
@@ -124,7 +127,7 @@ namespace TBSEAssessmentOne
 				}
 
                 Interlocked.Increment(ref loadingBarProgress);
-                progressBar1.Value = loadingBarProgress;
+                progressBar1.Invoke(new Action(() => progressBar1.Value = loadingBarProgress));
 			});
 
 
@@ -149,6 +152,8 @@ namespace TBSEAssessmentOne
 
             List<Task> TL = new List<Task>();
 
+
+            // TODO: Have duplicate calls for different combo boxes use continue with
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox1, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
@@ -178,6 +183,10 @@ namespace TBSEAssessmentOne
                 TaskScheduler.Default));
 
             TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox13, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
@@ -511,6 +520,46 @@ namespace TBSEAssessmentOne
             label11.Show();
             label12.Show();
             button6.Show();
+        }
+
+        private void comboBox13_TextChanged(object sender, EventArgs e)
+        {
+            if (chart2.Series["Quarterly"].Points.Count >= 1)
+                chart2.Series["Quarterly"].Points.Clear();
+
+            string store = comboBox13.Text;
+
+            double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterTwo = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 14 && order.date.week <= 26)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterThree = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 27 && order.date.week <= 40)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterFour = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 41 && order.date.week <= 52)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            chart2.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
+            chart2.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
+            chart2.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
+            chart2.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
+
+            for (int i = 0; i < chart2.Series["Quarterly"].Points.Count; i++)
+            {
+                chart2.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+            }
+
+            chart2.Show();
+
+            double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
+
+            richTextBox1.Text += "13 total cost: " + totalCost + '\n';
         }
     }
 }
