@@ -153,42 +153,26 @@ namespace TBSEAssessmentOne
             List<Task> TL = new List<Task>();
 
 
-            // TODO: Have duplicate calls for different combo boxes use continue with
             TL.Add(TF.StartNew(() => SetComboboxData(comboBox1, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox10, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(comboBox11, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(comboBox13, comboBoxStoreList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, comboBoxSuppliersList),
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, comboBoxSuppliersList), //sl
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox7, comboBoxSuppliersList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, comboBoxSupplierTypeList),
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, comboBoxSupplierTypeList), // stl
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox8, comboBoxSupplierTypeList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox7, comboBoxSuppliersList),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
-
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox8, comboBoxSupplierTypeList),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
-
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox10, comboBoxStoreList),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
-
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox11, comboBoxStoreList),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
 
             TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox13, comboBoxStoreList),
-                CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default));
+
 
             Task.WaitAll(TL.ToArray());
 
@@ -197,7 +181,7 @@ namespace TBSEAssessmentOne
             #endregion 
 
             // Total cost of all orders
-            double costs = queueOrder.Sum(num => num.cost); // 197186552.639997
+            double costs = queueOrder.Sum(num => num.cost);
 
            
 			stopwatch.Stop();
