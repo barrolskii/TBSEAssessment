@@ -131,22 +131,15 @@ namespace TBSEAssessmentOne
 			});
 
 
-            string[] suppliers = queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToArray();
-            string[] supplierTypes = queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToArray();
+            List<string> suppliers = new List<string> { "" };
+            suppliers.AddRange(queueOrder.AsParallel().Select(order => order.supplier).Distinct().OrderBy(order => order).ToList());
+
+            List<string> supplierTypes = new List<string> { "" };
+            supplierTypes.AddRange(queueOrder.AsParallel().Select(order => order.supplierType).Distinct().OrderBy(order => order).ToList());
 
             List<string> comboBoxStoreList = new List<string> { "" };
             comboBoxStoreList.AddRange(Stores.Keys.ToList());
 
-            List<string> comboBoxSuppliersList = new List<string> { "" };
-            comboBoxSuppliersList.AddRange(suppliers.ToList());
-
-            List<string> comboBoxSupplierTypeList = new List<string> { "" };
-            comboBoxSupplierTypeList.AddRange(supplierTypes.ToList());
-
-            #region Task Factory Test
-
-            Stopwatch tsw = new Stopwatch();
-            tsw.Start();
 
             TaskFactory TF = new TaskFactory(TaskScheduler.Default);
 
@@ -159,13 +152,13 @@ namespace TBSEAssessmentOne
                                       .ContinueWith((task) => SetComboboxData(comboBox11, comboBoxStoreList))
                                       .ContinueWith((task) => SetComboboxData(comboBox13, comboBoxStoreList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, comboBoxSuppliersList), //sl
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, suppliers), //sl
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox7, comboBoxSuppliersList)));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox7, suppliers)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, comboBoxSupplierTypeList), // stl
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, supplierTypes), // stl
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox8, comboBoxSupplierTypeList)));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox8, supplierTypes)));
 
 
             TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
@@ -173,12 +166,8 @@ namespace TBSEAssessmentOne
                 TaskScheduler.Default));
 
 
-
             Task.WaitAll(TL.ToArray());
 
-            tsw.Stop();
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + tsw.Elapsed + '\n'));
-            #endregion 
 
             // Total cost of all orders
             double costs = queueOrder.Sum(num => num.cost);
