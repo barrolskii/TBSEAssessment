@@ -142,7 +142,7 @@ namespace TBSEAssessmentOne
             List<Task> TL = new List<Task>();
 
 
-            TL.Add(TF.StartNew(() => comboBox1.Invoke(new Action(() => comboBox1.DataSource = comboBoxStoreList)),
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox1, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default));
 
@@ -189,7 +189,7 @@ namespace TBSEAssessmentOne
 			stopwatch.Stop();
 
             #region Debugging messages
-            textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs));
+            textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs.ToString("0.00")));
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
@@ -197,7 +197,7 @@ namespace TBSEAssessmentOne
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
 
 
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs + '\n'));
+			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs.ToString("0.00") + '\n'));
 
             #endregion
 
@@ -237,7 +237,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
             }
             else if (comboBox4.Text != "" && comboBox9.Text != "")
             {
@@ -247,7 +247,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week)
                                                                      .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week: " + totalCost.ToString("0.00") + '\n'));
             }
             else if (comboBox4.Text != "" && comboBox10.Text != "")
             {
@@ -257,7 +257,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost for a store: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost for a store: " + totalCost.ToString("0.00") + '\n'));
             }
             else
             {
@@ -277,7 +277,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.store.storeCode == store)
                                                                          .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week for a store: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
             }
             else if (comboBox5.Text != "" && comboBox12.Text != "")
             {
@@ -287,7 +287,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week)
                                                                          .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week: " + totalCost.ToString("0.00") + '\n'));
             }
             else if (comboBox5.Text != "" && comboBox11.Text != "")
             {
@@ -297,7 +297,7 @@ namespace TBSEAssessmentOne
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store)
                                                                          .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost for a store: " + totalCost + '\n'));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost for a store: " + totalCost.ToString("0.00") + '\n'));
             }
             else
             {
@@ -347,7 +347,7 @@ namespace TBSEAssessmentOne
 				chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
 			}
 
-			textBox2.Text = "Total cost: £" + totalCost;
+			textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
 
 			sw.Stop();
 
@@ -356,7 +356,7 @@ namespace TBSEAssessmentOne
 			/* Output for debgging purposes */
 			richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
 			richTextBox1.Text += "Row count: " + dataGridView2.Rows.Count + '\n'; // 628
-			richTextBox1.Text += "Total cost: " + totalCost + '\n'; // 22440.79
+			richTextBox1.Text += "Total cost: " + totalCost.ToString("0.00") + '\n'; // 22440.79
 		}
 
         /* Test button for temp function implementation */
@@ -440,8 +440,8 @@ namespace TBSEAssessmentOne
                 double test = queueOrder.AsParallel().Where(order => order.store.storeCode == store)
                                                      .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + costOfAllOrdersToAStore + "\n"));
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + test + "\n"));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + costOfAllOrdersToAStore.ToString("0.00") + "\n"));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": £" + test.ToString("0.00") + "\n"));
             }
         }
 
@@ -453,7 +453,7 @@ namespace TBSEAssessmentOne
                                                       .Select(order => order.cost)
                                                       .Sum();
 
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": £" + costOfAllStoresInAWeek + "\n"));
+            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": £" + costOfAllStoresInAWeek.ToString("0.00") + "\n"));
         }
 
         private void comboBox7_TextChanged(object sender, EventArgs e)
@@ -464,7 +464,7 @@ namespace TBSEAssessmentOne
                                                            .Select(order => order.cost)
                                                            .Sum();
 
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplier + ": £" + costOfAllOrdersForASupplier + "\n"));
+            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplier + ": £" + costOfAllOrdersForASupplier.ToString("0.00") + "\n"));
         }
 
         private void comboBox8_TextChanged(object sender, EventArgs e)
@@ -475,7 +475,7 @@ namespace TBSEAssessmentOne
                                                               .Select(order => order.cost)
                                                               .Sum();
 
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplierType + ": £" + costOfAllOrdersToASupplierType + "\n"));
+            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplierType + ": £" + costOfAllOrdersToASupplierType.ToString("0.00") + "\n"));
         }
 
         private void comboBox4_TextChanged(object sender, EventArgs e)
