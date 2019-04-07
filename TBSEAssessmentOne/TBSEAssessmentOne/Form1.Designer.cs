@@ -31,6 +31,7 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -216,10 +217,14 @@
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
             series1.Legend = "Legend1";
             series1.Name = "Supplier costs";
+            series1.SmartLabelStyle.Enabled = false;
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(548, 505);
             this.chart1.TabIndex = 8;
             this.chart1.Text = "chart1";
+            title1.Name = "Title1";
+            title1.Text = "Supplier type costs";
+            this.chart1.Titles.Add(title1);
             // 
             // textBox2
             // 

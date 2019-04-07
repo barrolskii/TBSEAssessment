@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TBSEAssessmentOne
 {
@@ -21,7 +22,7 @@ namespace TBSEAssessmentOne
 		Dictionary<string, Store> Stores;
 		ConcurrentQueue<Date> queueDate;
 		ConcurrentQueue<Order> queueOrder;
-
+        ToolTip toolTip;
 
 		public Form1()
 		{
@@ -33,6 +34,9 @@ namespace TBSEAssessmentOne
 
 			InitComboBoxes();
 			InitDataGridViewBoxes();
+
+            chart1.Hide();
+            toolTip = new ToolTip();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -341,17 +345,22 @@ namespace TBSEAssessmentOne
 				}
 			}
 
-            chart1.Titles.Add("Title");
+            chart1.Show();
 
-            chart1.Series.Clear();
+            if (chart1.Series["Supplier costs"].Points.Count >= 1)
+                chart1.Series["Supplier costs"].Points.Clear();
 
             foreach (var s in SupplierTypeCost)
 			{
-				chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
-                chart1.Series["Supplier costs"].Label = "";
+                chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
             }
 
-			textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
+            for (int i = 0; i < chart1.Series["Supplier costs"].Points.Count; i++)
+            {
+                chart1.Series["Supplier costs"].Points[i].IsValueShownAsLabel = true;
+            }
+
+            textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
 
 			sw.Stop();
 
