@@ -94,6 +94,8 @@ namespace TBSEAssessmentOne
             }
 
 			string[] fileNames = Directory.GetFiles(folderPath);
+            progressBar1.Maximum = fileNames.Length;
+            int loadingBarProgress = 0;
 
 			Parallel.ForEach(fileNames, file =>
 			{
@@ -121,6 +123,8 @@ namespace TBSEAssessmentOne
 					queueOrder.Enqueue(order);
 				}
 
+                Interlocked.Increment(ref loadingBarProgress);
+                progressBar1.Value = loadingBarProgress;
 			});
 
 
@@ -330,7 +334,7 @@ namespace TBSEAssessmentOne
 
 			foreach (var s in storeData)
 			{
-				string[] orderSplit = s.Split(',');
+                string[] orderSplit = s.Split(',');
 
 				dataGridView2.Rows.Add(orderSplit[0], orderSplit[1], orderSplit[2]);
 				totalCost += Convert.ToDouble(orderSplit[2]);
