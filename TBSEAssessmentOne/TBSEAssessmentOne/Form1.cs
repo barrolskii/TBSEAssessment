@@ -38,6 +38,8 @@ namespace TBSEAssessmentOne
             chart1.Hide();
             chart2.Hide();
             chart3.Hide();
+            chart4.Hide();
+            chart5.Hide();
 
             toolTip = new ToolTip();
         }
@@ -195,6 +197,17 @@ namespace TBSEAssessmentOne
             comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
             comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
             comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
+            comboBox4.Invoke(new Action(() => comboBox4.Enabled = true));
+            comboBox5.Invoke(new Action(() => comboBox5.Enabled = true));
+            comboBox6.Invoke(new Action(() => comboBox6.Enabled = true));
+            comboBox7.Invoke(new Action(() => comboBox7.Enabled = true));
+            comboBox8.Invoke(new Action(() => comboBox8.Enabled = true));
+            comboBox9.Invoke(new Action(() => comboBox9.Enabled = true));
+            comboBox10.Invoke(new Action(() => comboBox10.Enabled = true));
+            comboBox11.Invoke(new Action(() => comboBox11.Enabled = true));
+            comboBox12.Invoke(new Action(() => comboBox12.Enabled = true));
+            comboBox13.Invoke(new Action(() => comboBox13.Enabled = true));
+            comboBox14.Invoke(new Action(() => comboBox14.Enabled = true));
 
             dataGridView1.Invoke(new Action(() => dataGridView1.Columns[0].HeaderText = "Store Code"));
             dataGridView1.Columns[1].HeaderText = "Store Location";
@@ -371,6 +384,17 @@ namespace TBSEAssessmentOne
 			comboBox1.Enabled = false;
 			comboBox2.Enabled = false;
 			comboBox3.Enabled = false;
+            comboBox4.Enabled = false;
+            comboBox5.Enabled = false;
+            comboBox6.Enabled = false;
+            comboBox7.Enabled = false;
+            comboBox8.Enabled = false;
+            comboBox9.Enabled = false;
+            comboBox10.Enabled = false;
+            comboBox11.Enabled = false;
+            comboBox12.Enabled = false;
+            comboBox13.Enabled = false;
+            comboBox14.Enabled = false;
 
             /* 
              * Add empty string options for the combo boxes so the user can leave specific
@@ -577,6 +601,26 @@ namespace TBSEAssessmentOne
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
             richTextBox1.Text += "14 total cost: " + totalCost + ": " + chart3.Text + '\n';
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            double[] foo = new double[12];
+
+            Parallel.For(0, 12, (i) => 
+            {
+                double weekTotal = queueOrder.Where(order => order.date.year == 2013 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                foo[i] = weekTotal;
+            });
+
+            stopwatch.Stop();
+            
+            // TODO: Add data to the graph
+
+
+            richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
         }
     }
 }
