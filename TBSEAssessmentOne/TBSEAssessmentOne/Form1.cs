@@ -150,13 +150,14 @@ namespace TBSEAssessmentOne
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox10, comboBoxStoreList))
                                       .ContinueWith((task) => SetComboboxData(comboBox11, comboBoxStoreList))
-                                      .ContinueWith((task) => SetComboboxData(comboBox13, comboBoxStoreList)));
+                                      .ContinueWith((task) => SetComboboxData(comboBox13, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(comboBox14, comboBoxStoreList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, suppliers), //sl
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, suppliers),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox7, suppliers)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, supplierTypes), // stl
+            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, supplierTypes),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
                 TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox8, supplierTypes)));
 
@@ -528,11 +529,54 @@ namespace TBSEAssessmentOne
                 chart2.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
             }
 
+            chart2.Titles[0].Text = store;
             chart2.Show();
 
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
             richTextBox1.Text += "13 total cost: " + totalCost + '\n';
+        }
+
+        private void comboBox14_TextChanged(object sender, EventArgs e)
+        {
+            if (chart3.Series["Quarterly"].Points.Count >= 1)
+                chart3.Series["Quarterly"].Points.Clear();
+
+            string store = comboBox14.Text;
+
+            double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterTwo = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 14 && order.date.week <= 26)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterThree = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 27 && order.date.week <= 40)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            double quarterFour = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 41 && order.date.week <= 52)
+                                           .Select(order => order.cost)
+                                           .Sum();
+
+            chart3.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
+            chart3.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
+            chart3.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
+            chart3.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
+
+            for (int i = 0; i < chart3.Series["Quarterly"].Points.Count; i++)
+            {
+                chart3.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+            }
+
+
+            chart3.Titles[0].Text = store;
+            chart3.Show();
+
+            double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
+
+            richTextBox1.Text += "14 total cost: " + totalCost + ": " + chart3.Text + '\n';
         }
     }
 }
