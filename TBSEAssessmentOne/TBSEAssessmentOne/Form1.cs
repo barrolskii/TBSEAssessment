@@ -34,6 +34,9 @@ namespace TBSEAssessmentOne
 			InitComboBoxes();
 			InitDataGridViewBoxes();
             InitCharts();
+
+            progressBar1.Hide();
+            LblLoadingBar.Hide();
         }
 
         #region Button click functions
@@ -73,6 +76,9 @@ namespace TBSEAssessmentOne
 
             Task.WaitAll(TL.ToArray());
 
+            LblLoadingBar.Show();
+            LblLoadingBar.Text = "Loading store data...";
+            progressBar1.Show();
 
             t1 = new Task(() => ReadAllData());
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -251,6 +257,7 @@ namespace TBSEAssessmentOne
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
 
+
 			foreach (var s in storeList)
 			{
 				string[] splitStoreData = s.Split(',');
@@ -339,6 +346,8 @@ namespace TBSEAssessmentOne
 
            
 			stopwatch.Stop();
+
+            LblLoadingBar.Invoke(new Action(() => LblLoadingBar.Text = "Data loaded successfully"));
 
             #region Debugging messages
             textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs.ToString("0.00")));
