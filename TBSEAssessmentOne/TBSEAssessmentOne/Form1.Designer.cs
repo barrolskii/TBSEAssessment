@@ -78,13 +78,13 @@
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.chart4 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label14 = new System.Windows.Forms.Label();
-            this.comboBox14 = new System.Windows.Forms.ComboBox();
+            this.CBStoreComparisonStoreToCompare = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.comboBox13 = new System.Windows.Forms.ComboBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.CBStoreComparisonStore = new System.Windows.Forms.ComboBox();
+            this.CBStoreSearchStore = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.CBStoreSearchWeek = new System.Windows.Forms.ComboBox();
+            this.CBStoreSearchYear = new System.Windows.Forms.ComboBox();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
@@ -94,24 +94,24 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.comboBox11 = new System.Windows.Forms.ComboBox();
-            this.comboBox12 = new System.Windows.Forms.ComboBox();
+            this.CBSupplierTypeSearchStore = new System.Windows.Forms.ComboBox();
+            this.CBSupplierTypeSearchWeek = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.comboBox10 = new System.Windows.Forms.ComboBox();
-            this.comboBox9 = new System.Windows.Forms.ComboBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.CBSupplierSearchStore = new System.Windows.Forms.ComboBox();
+            this.CBSupplierSearchWeek = new System.Windows.Forms.ComboBox();
+            this.CBSupplierTypeSearchSupplierType = new System.Windows.Forms.ComboBox();
+            this.CBSupplierSearchSupplier = new System.Windows.Forms.ComboBox();
             this.button5 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.comboBox8 = new System.Windows.Forms.ComboBox();
-            this.comboBox7 = new System.Windows.Forms.ComboBox();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.CBAllStoreSearchSupplierType = new System.Windows.Forms.ComboBox();
+            this.CBAllStoreSearchSupplier = new System.Windows.Forms.ComboBox();
+            this.CBAllStoreSearchWeek = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -316,9 +316,9 @@
             this.tabPage5.Controls.Add(this.tabControl4);
             this.tabPage5.Controls.Add(this.tabControl2);
             this.tabPage5.Controls.Add(this.label14);
-            this.tabPage5.Controls.Add(this.comboBox14);
+            this.tabPage5.Controls.Add(this.CBStoreComparisonStoreToCompare);
             this.tabPage5.Controls.Add(this.label13);
-            this.tabPage5.Controls.Add(this.comboBox13);
+            this.tabPage5.Controls.Add(this.CBStoreComparisonStore);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(1292, 556);
@@ -485,16 +485,16 @@
             this.label14.TabIndex = 25;
             this.label14.Text = "Store To Compare";
             // 
-            // comboBox14
+            // CBStoreComparisonStoreToCompare
             // 
-            this.comboBox14.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox14.FormattingEnabled = true;
-            this.comboBox14.Location = new System.Drawing.Point(207, 485);
-            this.comboBox14.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox14.Name = "comboBox14";
-            this.comboBox14.Size = new System.Drawing.Size(133, 21);
-            this.comboBox14.TabIndex = 24;
-            this.comboBox14.TextChanged += new System.EventHandler(this.comboBox14_TextChanged);
+            this.CBStoreComparisonStoreToCompare.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBStoreComparisonStoreToCompare.FormattingEnabled = true;
+            this.CBStoreComparisonStoreToCompare.Location = new System.Drawing.Point(207, 485);
+            this.CBStoreComparisonStoreToCompare.Margin = new System.Windows.Forms.Padding(2);
+            this.CBStoreComparisonStoreToCompare.Name = "CBStoreComparisonStoreToCompare";
+            this.CBStoreComparisonStoreToCompare.Size = new System.Drawing.Size(133, 21);
+            this.CBStoreComparisonStoreToCompare.TabIndex = 24;
+            this.CBStoreComparisonStoreToCompare.TextChanged += new System.EventHandler(this.comboBox14_TextChanged);
             // 
             // label13
             // 
@@ -505,27 +505,27 @@
             this.label13.TabIndex = 23;
             this.label13.Text = "Store";
             // 
-            // comboBox13
+            // CBStoreComparisonStore
             // 
-            this.comboBox13.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox13.FormattingEnabled = true;
-            this.comboBox13.Location = new System.Drawing.Point(15, 485);
-            this.comboBox13.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox13.Name = "comboBox13";
-            this.comboBox13.Size = new System.Drawing.Size(133, 21);
-            this.comboBox13.TabIndex = 22;
-            this.comboBox13.TextChanged += new System.EventHandler(this.comboBox13_TextChanged);
+            this.CBStoreComparisonStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBStoreComparisonStore.FormattingEnabled = true;
+            this.CBStoreComparisonStore.Location = new System.Drawing.Point(15, 485);
+            this.CBStoreComparisonStore.Margin = new System.Windows.Forms.Padding(2);
+            this.CBStoreComparisonStore.Name = "CBStoreComparisonStore";
+            this.CBStoreComparisonStore.Size = new System.Drawing.Size(133, 21);
+            this.CBStoreComparisonStore.TabIndex = 22;
+            this.CBStoreComparisonStore.TextChanged += new System.EventHandler(this.comboBox13_TextChanged);
             // 
-            // comboBox1
+            // CBStoreSearchStore
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(6, 46);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(133, 21);
-            this.comboBox1.TabIndex = 8;
-            this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
+            this.CBStoreSearchStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBStoreSearchStore.FormattingEnabled = true;
+            this.CBStoreSearchStore.Location = new System.Drawing.Point(6, 46);
+            this.CBStoreSearchStore.Margin = new System.Windows.Forms.Padding(2);
+            this.CBStoreSearchStore.Name = "CBStoreSearchStore";
+            this.CBStoreSearchStore.Size = new System.Drawing.Size(133, 21);
+            this.CBStoreSearchStore.TabIndex = 8;
+            this.CBStoreSearchStore.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
             // button2
             // 
@@ -538,25 +538,25 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // comboBox2
+            // CBStoreSearchWeek
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(6, 106);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(133, 21);
-            this.comboBox2.TabIndex = 10;
+            this.CBStoreSearchWeek.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBStoreSearchWeek.FormattingEnabled = true;
+            this.CBStoreSearchWeek.Location = new System.Drawing.Point(6, 106);
+            this.CBStoreSearchWeek.Margin = new System.Windows.Forms.Padding(2);
+            this.CBStoreSearchWeek.Name = "CBStoreSearchWeek";
+            this.CBStoreSearchWeek.Size = new System.Drawing.Size(133, 21);
+            this.CBStoreSearchWeek.TabIndex = 10;
             // 
-            // comboBox3
+            // CBStoreSearchYear
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(6, 169);
-            this.comboBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(132, 21);
-            this.comboBox3.TabIndex = 11;
+            this.CBStoreSearchYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBStoreSearchYear.FormattingEnabled = true;
+            this.CBStoreSearchYear.Location = new System.Drawing.Point(6, 169);
+            this.CBStoreSearchYear.Margin = new System.Windows.Forms.Padding(2);
+            this.CBStoreSearchYear.Name = "CBStoreSearchYear";
+            this.CBStoreSearchYear.Size = new System.Drawing.Size(132, 21);
+            this.CBStoreSearchYear.TabIndex = 11;
             // 
             // tabControl3
             // 
@@ -574,14 +574,14 @@
             this.tabPage6.Controls.Add(this.label3);
             this.tabPage6.Controls.Add(this.label2);
             this.tabPage6.Controls.Add(this.label1);
-            this.tabPage6.Controls.Add(this.comboBox1);
-            this.tabPage6.Controls.Add(this.comboBox2);
-            this.tabPage6.Controls.Add(this.comboBox3);
+            this.tabPage6.Controls.Add(this.CBStoreSearchStore);
+            this.tabPage6.Controls.Add(this.CBStoreSearchWeek);
+            this.tabPage6.Controls.Add(this.CBStoreSearchYear);
             this.tabPage6.Controls.Add(this.button2);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(410, 331);
+            this.tabPage6.Size = new System.Drawing.Size(274, 331);
             this.tabPage6.TabIndex = 0;
             this.tabPage6.Text = "Store Search";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -618,16 +618,16 @@
             this.tabPage7.Controls.Add(this.button6);
             this.tabPage7.Controls.Add(this.label11);
             this.tabPage7.Controls.Add(this.label12);
-            this.tabPage7.Controls.Add(this.comboBox11);
-            this.tabPage7.Controls.Add(this.comboBox12);
+            this.tabPage7.Controls.Add(this.CBSupplierTypeSearchStore);
+            this.tabPage7.Controls.Add(this.CBSupplierTypeSearchWeek);
             this.tabPage7.Controls.Add(this.label7);
             this.tabPage7.Controls.Add(this.label6);
             this.tabPage7.Controls.Add(this.label5);
             this.tabPage7.Controls.Add(this.label4);
-            this.tabPage7.Controls.Add(this.comboBox10);
-            this.tabPage7.Controls.Add(this.comboBox9);
-            this.tabPage7.Controls.Add(this.comboBox5);
-            this.tabPage7.Controls.Add(this.comboBox4);
+            this.tabPage7.Controls.Add(this.CBSupplierSearchStore);
+            this.tabPage7.Controls.Add(this.CBSupplierSearchWeek);
+            this.tabPage7.Controls.Add(this.CBSupplierTypeSearchSupplierType);
+            this.tabPage7.Controls.Add(this.CBSupplierSearchSupplier);
             this.tabPage7.Controls.Add(this.button5);
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
@@ -665,25 +665,25 @@
             this.label12.TabIndex = 24;
             this.label12.Text = "Week";
             // 
-            // comboBox11
+            // CBSupplierTypeSearchStore
             // 
-            this.comboBox11.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox11.FormattingEnabled = true;
-            this.comboBox11.Location = new System.Drawing.Point(9, 300);
-            this.comboBox11.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox11.Name = "comboBox11";
-            this.comboBox11.Size = new System.Drawing.Size(133, 21);
-            this.comboBox11.TabIndex = 23;
+            this.CBSupplierTypeSearchStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierTypeSearchStore.FormattingEnabled = true;
+            this.CBSupplierTypeSearchStore.Location = new System.Drawing.Point(9, 300);
+            this.CBSupplierTypeSearchStore.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierTypeSearchStore.Name = "CBSupplierTypeSearchStore";
+            this.CBSupplierTypeSearchStore.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierTypeSearchStore.TabIndex = 23;
             // 
-            // comboBox12
+            // CBSupplierTypeSearchWeek
             // 
-            this.comboBox12.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox12.FormattingEnabled = true;
-            this.comboBox12.Location = new System.Drawing.Point(9, 262);
-            this.comboBox12.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox12.Name = "comboBox12";
-            this.comboBox12.Size = new System.Drawing.Size(133, 21);
-            this.comboBox12.TabIndex = 22;
+            this.CBSupplierTypeSearchWeek.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierTypeSearchWeek.FormattingEnabled = true;
+            this.CBSupplierTypeSearchWeek.Location = new System.Drawing.Point(9, 262);
+            this.CBSupplierTypeSearchWeek.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierTypeSearchWeek.Name = "CBSupplierTypeSearchWeek";
+            this.CBSupplierTypeSearchWeek.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierTypeSearchWeek.TabIndex = 22;
             // 
             // label7
             // 
@@ -715,53 +715,53 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 18);
+            this.label4.Location = new System.Drawing.Point(2, 15);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 13);
             this.label4.TabIndex = 18;
             this.label4.Text = "Supplier";
             // 
-            // comboBox10
+            // CBSupplierSearchStore
             // 
-            this.comboBox10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox10.FormattingEnabled = true;
-            this.comboBox10.Location = new System.Drawing.Point(5, 128);
-            this.comboBox10.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox10.Name = "comboBox10";
-            this.comboBox10.Size = new System.Drawing.Size(133, 21);
-            this.comboBox10.TabIndex = 16;
+            this.CBSupplierSearchStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierSearchStore.FormattingEnabled = true;
+            this.CBSupplierSearchStore.Location = new System.Drawing.Point(5, 128);
+            this.CBSupplierSearchStore.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierSearchStore.Name = "CBSupplierSearchStore";
+            this.CBSupplierSearchStore.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierSearchStore.TabIndex = 16;
             // 
-            // comboBox9
+            // CBSupplierSearchWeek
             // 
-            this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox9.FormattingEnabled = true;
-            this.comboBox9.Location = new System.Drawing.Point(5, 90);
-            this.comboBox9.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox9.Name = "comboBox9";
-            this.comboBox9.Size = new System.Drawing.Size(133, 21);
-            this.comboBox9.TabIndex = 15;
+            this.CBSupplierSearchWeek.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierSearchWeek.FormattingEnabled = true;
+            this.CBSupplierSearchWeek.Location = new System.Drawing.Point(5, 90);
+            this.CBSupplierSearchWeek.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierSearchWeek.Name = "CBSupplierSearchWeek";
+            this.CBSupplierSearchWeek.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierSearchWeek.TabIndex = 15;
             // 
-            // comboBox5
+            // CBSupplierTypeSearchSupplierType
             // 
-            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(9, 192);
-            this.comboBox5.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(133, 21);
-            this.comboBox5.TabIndex = 14;
-            this.comboBox5.TextChanged += new System.EventHandler(this.comboBox5_TextChanged);
+            this.CBSupplierTypeSearchSupplierType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierTypeSearchSupplierType.FormattingEnabled = true;
+            this.CBSupplierTypeSearchSupplierType.Location = new System.Drawing.Point(9, 192);
+            this.CBSupplierTypeSearchSupplierType.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierTypeSearchSupplierType.Name = "CBSupplierTypeSearchSupplierType";
+            this.CBSupplierTypeSearchSupplierType.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierTypeSearchSupplierType.TabIndex = 14;
+            this.CBSupplierTypeSearchSupplierType.TextChanged += new System.EventHandler(this.comboBox5_TextChanged);
             // 
-            // comboBox4
+            // CBSupplierSearchSupplier
             // 
-            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(7, 45);
-            this.comboBox4.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(133, 21);
-            this.comboBox4.TabIndex = 13;
-            this.comboBox4.TextChanged += new System.EventHandler(this.comboBox4_TextChanged);
+            this.CBSupplierSearchSupplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBSupplierSearchSupplier.FormattingEnabled = true;
+            this.CBSupplierSearchSupplier.Location = new System.Drawing.Point(5, 40);
+            this.CBSupplierSearchSupplier.Margin = new System.Windows.Forms.Padding(2);
+            this.CBSupplierSearchSupplier.Name = "CBSupplierSearchSupplier";
+            this.CBSupplierSearchSupplier.Size = new System.Drawing.Size(133, 21);
+            this.CBSupplierSearchSupplier.TabIndex = 13;
+            this.CBSupplierSearchSupplier.TextChanged += new System.EventHandler(this.comboBox4_TextChanged);
             // 
             // button5
             // 
@@ -778,12 +778,12 @@
             this.tabPage4.Controls.Add(this.label10);
             this.tabPage4.Controls.Add(this.label9);
             this.tabPage4.Controls.Add(this.label8);
-            this.tabPage4.Controls.Add(this.comboBox8);
-            this.tabPage4.Controls.Add(this.comboBox7);
-            this.tabPage4.Controls.Add(this.comboBox6);
+            this.tabPage4.Controls.Add(this.CBAllStoreSearchSupplierType);
+            this.tabPage4.Controls.Add(this.CBAllStoreSearchSupplier);
+            this.tabPage4.Controls.Add(this.CBAllStoreSearchWeek);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(410, 331);
+            this.tabPage4.Size = new System.Drawing.Size(274, 331);
             this.tabPage4.TabIndex = 2;
             this.tabPage4.Text = "All Store Search";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -815,38 +815,38 @@
             this.label8.TabIndex = 18;
             this.label8.Text = "Week";
             // 
-            // comboBox8
+            // CBAllStoreSearchSupplierType
             // 
-            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox8.FormattingEnabled = true;
-            this.comboBox8.Location = new System.Drawing.Point(4, 162);
-            this.comboBox8.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox8.Name = "comboBox8";
-            this.comboBox8.Size = new System.Drawing.Size(133, 21);
-            this.comboBox8.TabIndex = 14;
-            this.comboBox8.TextChanged += new System.EventHandler(this.comboBox8_TextChanged);
+            this.CBAllStoreSearchSupplierType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBAllStoreSearchSupplierType.FormattingEnabled = true;
+            this.CBAllStoreSearchSupplierType.Location = new System.Drawing.Point(4, 162);
+            this.CBAllStoreSearchSupplierType.Margin = new System.Windows.Forms.Padding(2);
+            this.CBAllStoreSearchSupplierType.Name = "CBAllStoreSearchSupplierType";
+            this.CBAllStoreSearchSupplierType.Size = new System.Drawing.Size(133, 21);
+            this.CBAllStoreSearchSupplierType.TabIndex = 14;
+            this.CBAllStoreSearchSupplierType.TextChanged += new System.EventHandler(this.comboBox8_TextChanged);
             // 
-            // comboBox7
+            // CBAllStoreSearchSupplier
             // 
-            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Location = new System.Drawing.Point(2, 100);
-            this.comboBox7.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox7.Name = "comboBox7";
-            this.comboBox7.Size = new System.Drawing.Size(133, 21);
-            this.comboBox7.TabIndex = 13;
-            this.comboBox7.TextChanged += new System.EventHandler(this.comboBox7_TextChanged);
+            this.CBAllStoreSearchSupplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBAllStoreSearchSupplier.FormattingEnabled = true;
+            this.CBAllStoreSearchSupplier.Location = new System.Drawing.Point(2, 100);
+            this.CBAllStoreSearchSupplier.Margin = new System.Windows.Forms.Padding(2);
+            this.CBAllStoreSearchSupplier.Name = "CBAllStoreSearchSupplier";
+            this.CBAllStoreSearchSupplier.Size = new System.Drawing.Size(133, 21);
+            this.CBAllStoreSearchSupplier.TabIndex = 13;
+            this.CBAllStoreSearchSupplier.TextChanged += new System.EventHandler(this.comboBox7_TextChanged);
             // 
-            // comboBox6
+            // CBAllStoreSearchWeek
             // 
-            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Location = new System.Drawing.Point(2, 42);
-            this.comboBox6.Margin = new System.Windows.Forms.Padding(2);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(133, 21);
-            this.comboBox6.TabIndex = 12;
-            this.comboBox6.TextChanged += new System.EventHandler(this.comboBox6_TextChanged);
+            this.CBAllStoreSearchWeek.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CBAllStoreSearchWeek.FormattingEnabled = true;
+            this.CBAllStoreSearchWeek.Location = new System.Drawing.Point(2, 42);
+            this.CBAllStoreSearchWeek.Margin = new System.Windows.Forms.Padding(2);
+            this.CBAllStoreSearchWeek.Name = "CBAllStoreSearchWeek";
+            this.CBAllStoreSearchWeek.Size = new System.Drawing.Size(133, 21);
+            this.CBAllStoreSearchWeek.TabIndex = 12;
+            this.CBAllStoreSearchWeek.TextChanged += new System.EventHandler(this.comboBox6_TextChanged);
             // 
             // Form1
             // 
@@ -904,10 +904,10 @@
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ComboBox CBStoreSearchStore;
 		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.ComboBox comboBox2;
-		private System.Windows.Forms.ComboBox comboBox3;
+		private System.Windows.Forms.ComboBox CBStoreSearchWeek;
+		private System.Windows.Forms.ComboBox CBStoreSearchYear;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.RichTextBox richTextBox4;
@@ -919,13 +919,13 @@
 		private System.Windows.Forms.Button button5;
 		private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
 		private System.Windows.Forms.TabPage tabPage4;
-		private System.Windows.Forms.ComboBox comboBox8;
-		private System.Windows.Forms.ComboBox comboBox7;
-		private System.Windows.Forms.ComboBox comboBox6;
-		private System.Windows.Forms.ComboBox comboBox5;
-		private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ComboBox comboBox9;
-        private System.Windows.Forms.ComboBox comboBox10;
+		private System.Windows.Forms.ComboBox CBAllStoreSearchSupplierType;
+		private System.Windows.Forms.ComboBox CBAllStoreSearchSupplier;
+		private System.Windows.Forms.ComboBox CBAllStoreSearchWeek;
+		private System.Windows.Forms.ComboBox CBSupplierTypeSearchSupplierType;
+		private System.Windows.Forms.ComboBox CBSupplierSearchSupplier;
+        private System.Windows.Forms.ComboBox CBSupplierSearchWeek;
+        private System.Windows.Forms.ComboBox CBSupplierSearchStore;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -938,16 +938,16 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ComboBox comboBox11;
-        private System.Windows.Forms.ComboBox comboBox12;
+        private System.Windows.Forms.ComboBox CBSupplierTypeSearchStore;
+        private System.Windows.Forms.ComboBox CBSupplierTypeSearchWeek;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart3;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox comboBox13;
+        private System.Windows.Forms.ComboBox CBStoreComparisonStore;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox comboBox14;
+        private System.Windows.Forms.ComboBox CBStoreComparisonStoreToCompare;
         private System.Windows.Forms.TabControl tabControl4;
         private System.Windows.Forms.TabPage tabPage10;
         private System.Windows.Forms.TabPage tabPage11;

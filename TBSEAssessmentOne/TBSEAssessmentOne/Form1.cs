@@ -156,20 +156,20 @@ namespace TBSEAssessmentOne
             List<Task> TL = new List<Task>();
 
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox1, comboBoxStoreList),
+            TL.Add(TF.StartNew(() => SetComboboxData(CBStoreSearchStore, comboBoxStoreList),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox10, comboBoxStoreList))
-                                      .ContinueWith((task) => SetComboboxData(comboBox11, comboBoxStoreList))
-                                      .ContinueWith((task) => SetComboboxData(comboBox13, comboBoxStoreList))
-                                      .ContinueWith((task) => SetComboboxData(comboBox14, comboBoxStoreList)));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(CBSupplierSearchStore, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(CBSupplierTypeSearchStore, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(CBStoreComparisonStore, comboBoxStoreList))
+                                      .ContinueWith((task) => SetComboboxData(CBStoreComparisonStoreToCompare, comboBoxStoreList)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox4, suppliers),
+            TL.Add(TF.StartNew(() => SetComboboxData(CBSupplierSearchSupplier, suppliers),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox7, suppliers)));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(CBAllStoreSearchSupplier, suppliers)));
 
-            TL.Add(TF.StartNew(() => SetComboboxData(comboBox5, supplierTypes),
+            TL.Add(TF.StartNew(() => SetComboboxData(CBSupplierTypeSearchSupplierType, supplierTypes),
                 CancellationToken.None, TaskCreationOptions.PreferFairness,
-                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(comboBox8, supplierTypes)));
+                TaskScheduler.Default).ContinueWith((task) => SetComboboxData(CBAllStoreSearchSupplierType, supplierTypes)));
 
 
             TL.Add(TF.StartNew(() => SetDataGridViewDatasource(dataGridView1, Stores.Values.ToList()),
@@ -196,26 +196,26 @@ namespace TBSEAssessmentOne
 
 
 			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs.ToString("0.00") + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox1.Items.Count + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox10.Items.Count + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + comboBox11.Items.Count + '\n'));
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBStoreSearchStore.Items.Count + '\n'));
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBSupplierSearchStore.Items.Count + '\n'));
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBSupplierTypeSearchStore.Items.Count + '\n'));
             #endregion
 
             /* Enable combo boxes for search queries */
-            comboBox1.Invoke(new Action(() => comboBox1.Enabled = true));
-            comboBox2.Invoke(new Action(() => comboBox2.Enabled = true));
-            comboBox3.Invoke(new Action(() => comboBox3.Enabled = true));
-            comboBox4.Invoke(new Action(() => comboBox4.Enabled = true));
-            comboBox5.Invoke(new Action(() => comboBox5.Enabled = true));
-            comboBox6.Invoke(new Action(() => comboBox6.Enabled = true));
-            comboBox7.Invoke(new Action(() => comboBox7.Enabled = true));
-            comboBox8.Invoke(new Action(() => comboBox8.Enabled = true));
-            comboBox9.Invoke(new Action(() => comboBox9.Enabled = true));
-            comboBox10.Invoke(new Action(() => comboBox10.Enabled = true));
-            comboBox11.Invoke(new Action(() => comboBox11.Enabled = true));
-            comboBox12.Invoke(new Action(() => comboBox12.Enabled = true));
-            comboBox13.Invoke(new Action(() => comboBox13.Enabled = true));
-            comboBox14.Invoke(new Action(() => comboBox14.Enabled = true));
+            CBStoreSearchStore.Invoke(new Action(() => CBStoreSearchStore.Enabled = true));
+            CBStoreSearchWeek.Invoke(new Action(() => CBStoreSearchWeek.Enabled = true));
+            CBStoreSearchYear.Invoke(new Action(() => CBStoreSearchYear.Enabled = true));
+            CBSupplierSearchSupplier.Invoke(new Action(() => CBSupplierSearchSupplier.Enabled = true));
+            CBSupplierTypeSearchSupplierType.Invoke(new Action(() => CBSupplierTypeSearchSupplierType.Enabled = true));
+            CBAllStoreSearchWeek.Invoke(new Action(() => CBAllStoreSearchWeek.Enabled = true));
+            CBAllStoreSearchSupplier.Invoke(new Action(() => CBAllStoreSearchSupplier.Enabled = true));
+            CBAllStoreSearchSupplierType.Invoke(new Action(() => CBAllStoreSearchSupplierType.Enabled = true));
+            CBSupplierSearchWeek.Invoke(new Action(() => CBSupplierSearchWeek.Enabled = true));
+            CBSupplierSearchStore.Invoke(new Action(() => CBSupplierSearchStore.Enabled = true));
+            CBSupplierTypeSearchStore.Invoke(new Action(() => CBSupplierTypeSearchStore.Enabled = true));
+            CBSupplierTypeSearchWeek.Invoke(new Action(() => CBSupplierTypeSearchWeek.Enabled = true));
+            CBStoreComparisonStore.Invoke(new Action(() => CBStoreComparisonStore.Enabled = true));
+            CBStoreComparisonStoreToCompare.Invoke(new Action(() => CBStoreComparisonStoreToCompare.Enabled = true));
 
             dataGridView1.Invoke(new Action(() => dataGridView1.Columns[0].HeaderText = "Store Code"));
             dataGridView1.Columns[1].HeaderText = "Store Location";
@@ -239,31 +239,31 @@ namespace TBSEAssessmentOne
 		private void button5_Click(object sender, EventArgs e)
 		{
             // Supplier
-            if (comboBox4.Text != "" && comboBox9.Text != "" && comboBox10.Text != "")
+            if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "" && CBSupplierSearchStore.Text != "")
             {
-                string supplier = comboBox4.Text;
-                string store = comboBox10.Text;
-                int week = Convert.ToInt32(comboBox9.Text);
+                string supplier = CBSupplierSearchSupplier.Text;
+                string store = CBSupplierSearchStore.Text;
+                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
 
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
 
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
             }
-            else if (comboBox4.Text != "" && comboBox9.Text != "")
+            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "")
             {
-                string supplier = comboBox4.Text;
-                int week = Convert.ToInt32(comboBox9.Text);
+                string supplier = CBSupplierSearchSupplier.Text;
+                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
 
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week)
                                                                      .Select(order => order.cost).Sum();
 
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week: " + totalCost.ToString("0.00") + '\n'));
             }
-            else if (comboBox4.Text != "" && comboBox10.Text != "")
+            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchStore.Text != "")
             {
-                string supplier = comboBox4.Text;
-                string store = comboBox10.Text;
+                string supplier = CBSupplierSearchSupplier.Text;
+                string store = CBSupplierSearchStore.Text;
 
                 double totalCost = queueOrder.Where(order => order.supplier == supplier && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
@@ -279,31 +279,31 @@ namespace TBSEAssessmentOne
         private void button6_Click(object sender, EventArgs e)
         {
             // Supplier type
-            if (comboBox5.Text != "" && comboBox12.Text != "" && comboBox11.Text != "")
+            if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "" && CBSupplierTypeSearchStore.Text != "")
             {
-                string supplierType = comboBox5.Text;
-                int week = Convert.ToInt32(comboBox12.Text);
-                string store = comboBox11.Text;
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
+                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
+                string store = CBSupplierTypeSearchStore.Text;
 
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.store.storeCode == store)
                                                                          .Select(order => order.cost).Sum();
 
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
             }
-            else if (comboBox5.Text != "" && comboBox12.Text != "")
+            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "")
             {
-                int week = Convert.ToInt32(comboBox12.Text);
-                string supplierType = comboBox5.Text;
+                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
 
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week)
                                                                          .Select(order => order.cost).Sum();
 
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week: " + totalCost.ToString("0.00") + '\n'));
             }
-            else if (comboBox5.Text != "" && comboBox11.Text != "")
+            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchStore.Text != "")
             {
-                string supplierType = comboBox5.Text;
-                string store = comboBox11.Text;
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
+                string store = CBSupplierTypeSearchStore.Text;
 
                 double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store)
                                                                          .Select(order => order.cost).Sum();
@@ -316,7 +316,7 @@ namespace TBSEAssessmentOne
             }
         }
 
-        // Function covers total cost for all orders in a week for a store
+        // Function covers total cost for all orders in a week for a store Time: 00:00:00.0500830
         private void button2_Click(object sender, EventArgs e)
 		{
 			double totalCost = 0;
@@ -326,11 +326,12 @@ namespace TBSEAssessmentOne
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
 
-			string fileToSearch = storeCSVFileLocation + "StoreData/" + comboBox1.Text + '_' + comboBox2.Text + '_' + comboBox3.Text + ".csv";
+
+            string fileToSearch = storeCSVFileLocation + "StoreData/" + CBStoreSearchStore.Text + '_' + CBStoreSearchWeek.Text + '_' + CBStoreSearchYear.Text + ".csv";
 			string[] storeData = File.ReadAllLines(fileToSearch);
 
 			/* If the cell rows already contain data then remove them */
-			if (dataGridView2.Rows.Count >= 2)
+            if (dataGridView2.Rows.Count >= 2)
 			{
 				richTextBox1.Text += "Rows begin deleted" + '\n';
 				dataGridView2.Rows.Clear();
@@ -370,7 +371,7 @@ namespace TBSEAssessmentOne
 
             textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
 
-			sw.Stop();
+            sw.Stop();
 
 			tabControl1.SelectedTab = tabPage2;
 
@@ -389,29 +390,33 @@ namespace TBSEAssessmentOne
 		private void InitComboBoxes()
 		{
 			/* Disable use of combo boxes until data is loaded in */
-			comboBox1.Enabled = false;
-			comboBox2.Enabled = false;
-			comboBox3.Enabled = false;
-            comboBox4.Enabled = false;
-            comboBox5.Enabled = false;
-            comboBox6.Enabled = false;
-            comboBox7.Enabled = false;
-            comboBox8.Enabled = false;
-            comboBox9.Enabled = false;
-            comboBox10.Enabled = false;
-            comboBox11.Enabled = false;
-            comboBox12.Enabled = false;
-            comboBox13.Enabled = false;
-            comboBox14.Enabled = false;
+			CBStoreSearchStore.Enabled = false;
+			CBStoreSearchWeek.Enabled  = false;
+			CBStoreSearchYear.Enabled  = false;
+
+            CBSupplierSearchSupplier.Enabled = false;
+            CBSupplierSearchWeek.Enabled     = false;
+            CBSupplierSearchStore.Enabled    = false;
+
+            CBSupplierTypeSearchSupplierType.Enabled = false;
+            CBSupplierTypeSearchWeek.Enabled         = false;
+            CBSupplierTypeSearchStore.Enabled        = false;
+
+            CBAllStoreSearchWeek.Enabled         = false;
+            CBAllStoreSearchSupplier.Enabled     = false;
+            CBAllStoreSearchSupplierType.Enabled = false;
+
+            CBStoreComparisonStore.Enabled          = false;
+            CBStoreComparisonStoreToCompare.Enabled = false;
 
             /* 
              * Add empty string options for the combo boxes so the user can leave specific
              * search fields blank
              */
-            comboBox6.Items.Add("");
-            comboBox9.Items.Add("");
-            comboBox10.Items.Add("");
-            comboBox12.Items.Add("");
+            CBAllStoreSearchWeek.Items.Add("");
+            CBSupplierSearchWeek.Items.Add("");
+            CBSupplierSearchStore.Items.Add("");
+            CBSupplierTypeSearchWeek.Items.Add("");
 
             /* 
 			 * Populate the second combo box to have a selection of weeks and populate the 
@@ -419,28 +424,28 @@ namespace TBSEAssessmentOne
 			 */
             for (int i = 1; i <= 52; i++)
 			{
-				comboBox2.Items.Add(i);
-				comboBox6.Items.Add(i);
-                comboBox9.Items.Add(i);
-                comboBox12.Items.Add(i);
+				CBStoreSearchWeek.Items.Add(i);
+				CBAllStoreSearchWeek.Items.Add(i);
+                CBSupplierSearchWeek.Items.Add(i);
+                CBSupplierTypeSearchWeek.Items.Add(i);
 			}
 
 			/*
 			 * Only two years to choose from in the files so this combo box
 			 * only needs two options
 			 */
-			comboBox3.Items.Add(2013);
-			comboBox3.Items.Add(2014);
+			CBStoreSearchYear.Items.Add(2013);
+			CBStoreSearchYear.Items.Add(2014);
 
             // Hide the supplier search combo boxes and buttons until relevant data is added
-            comboBox9.Hide();
-            comboBox10.Hide();
+            CBSupplierSearchWeek.Hide();
+            CBSupplierSearchStore.Hide();
             label6.Hide();
             label7.Hide();
             button5.Hide();
 
-            comboBox11.Hide();
-            comboBox12.Hide();
+            CBSupplierTypeSearchStore.Hide();
+            CBSupplierTypeSearchWeek.Hide();
             label11.Hide();
             label12.Hide();
             button6.Hide();
@@ -461,7 +466,7 @@ namespace TBSEAssessmentOne
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
-            string store = comboBox1.Text;
+            string store = CBStoreSearchStore.Text;
 
             if (store != "")
             {
@@ -479,7 +484,7 @@ namespace TBSEAssessmentOne
 
         private void comboBox6_TextChanged(object sender, EventArgs e)
         {
-            int week = Convert.ToInt32(comboBox6.Text);
+            int week = Convert.ToInt32(CBAllStoreSearchWeek.Text);
 
             double costOfAllStoresInAWeek = queueOrder.Where(order => order.date.week == week)
                                                       .Select(order => order.cost)
@@ -490,7 +495,7 @@ namespace TBSEAssessmentOne
 
         private void comboBox7_TextChanged(object sender, EventArgs e)
         {
-            string supplier = comboBox7.Text;
+            string supplier = CBAllStoreSearchSupplier.Text;
 
             double costOfAllOrdersForASupplier = queueOrder.Where(order => order.supplier == supplier)
                                                            .Select(order => order.cost)
@@ -501,7 +506,7 @@ namespace TBSEAssessmentOne
 
         private void comboBox8_TextChanged(object sender, EventArgs e)
         {
-            string supplierType = comboBox8.Text;
+            string supplierType = CBAllStoreSearchSupplierType.Text;
 
             double costOfAllOrdersToASupplierType = queueOrder.Where(order => order.supplierType == supplierType)
                                                               .Select(order => order.cost)
@@ -512,8 +517,8 @@ namespace TBSEAssessmentOne
 
         private void comboBox4_TextChanged(object sender, EventArgs e)
         {
-            comboBox9.Show();
-            comboBox10.Show();
+            CBSupplierSearchWeek.Show();
+            CBSupplierSearchStore.Show();
             label6.Show();
             label7.Show();
             button5.Show();
@@ -521,8 +526,8 @@ namespace TBSEAssessmentOne
 
         private void comboBox5_TextChanged(object sender, EventArgs e)
         {
-            comboBox11.Show();
-            comboBox12.Show();
+            CBSupplierTypeSearchStore.Show();
+            CBSupplierTypeSearchWeek.Show();
             label11.Show();
             label12.Show();
             button6.Show();
@@ -533,7 +538,7 @@ namespace TBSEAssessmentOne
             if (chart2.Series["Quarterly"].Points.Count >= 1)
                 chart2.Series["Quarterly"].Points.Clear();
 
-            string store = comboBox13.Text;
+            string store = CBStoreComparisonStore.Text;
 
             double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
                                            .Select(order => order.cost)
@@ -612,7 +617,7 @@ namespace TBSEAssessmentOne
             if (chart3.Series["Quarterly"].Points.Count >= 1)
                 chart3.Series["Quarterly"].Points.Clear();
 
-            string store = comboBox14.Text;
+            string store = CBStoreComparisonStoreToCompare.Text;
 
             double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
                                            .Select(order => order.cost)
