@@ -588,104 +588,34 @@ namespace TBSEAssessmentOne
 
         private void CBStoreComparisonStore_TextChanged(object sender, EventArgs e)
         {
-            if (ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count >= 1)
-                ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Clear();
-
-            if (ChartStoreComparisonLineLeft.Series["2013"].Points.Count >= 1)
-            {
-                ChartStoreComparisonLineLeft.Series["2013"].Points.Clear();
-                ChartStoreComparisonLineLeft.Series["2014"].Points.Clear();
-            }
-
-
             string store = CBStoreComparisonStore.Text;
 
-            double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
-                                           .Select(order => order.cost)
-                                           .Sum();
-
-            double quarterTwo = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 14 && order.date.week <= 26)
-                                           .Select(order => order.cost)
-                                           .Sum();
-
-            double quarterThree = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 27 && order.date.week <= 40)
-                                           .Select(order => order.cost)
-                                           .Sum();
-
-            double quarterFour = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 41 && order.date.week <= 52)
-                                           .Select(order => order.cost)
-                                           .Sum();
-
-            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
-            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
-            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
-            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
-
-            string[] quarters = new string[4] { "First quarter", "Second quarter", "Third quarter", "Fourth quarter" };
-            for (int i = 0; i < ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count; i++)
-            {
-                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].LegendText = quarters[i];
-                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].Label = ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].YValues[0].ToString("C2");
-            }
-
-            ChartStoreComparisonPieLeft.Titles[0].Text = store;
-            ChartStoreComparisonPieLeft.Show();
-
-            double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
-
-            richTextBox1.Text += "13 total cost: " + totalCost + '\n';
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            double[] monthOrders2013 = new double[12];
-            double[] monthOrders2014 = new double[12];
-
-            Parallel.For(0, 12, (i) =>
-            {
-                double weekTotal = queueOrder.Where(order => order.date.year == 2013 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
-                                             .Select(order => order.cost).Sum();
-
-                monthOrders2013[i] = weekTotal;
-            });
-
-            Parallel.For(0, 12, (i) =>
-            {
-                double weekTotal = queueOrder.Where(order => order.date.year == 2014 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
-                                             .Select(order => order.cost).Sum();
-
-                monthOrders2014[i] = weekTotal;
-            });
-
-            stopwatch.Stop();
-
-            string[] months = Enum.GetNames(typeof(Months));
-
-
-            for (int i = 0; i < 12; i++)
-            {
-                ChartStoreComparisonLineLeft.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
-                ChartStoreComparisonLineLeft.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
-            }
-
-
-            ChartStoreComparisonLineLeft.Show();
-
-            richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
+            Task task = new Task(() => PopulateComparisonData(ChartStoreComparisonPieLeft, ChartStoreComparisonLineLeft, store));
+            task.Start();
         }
 
         private void CBStoreComparisonStoreToCompare_TextChanged(object sender, EventArgs e)
         {
-            if (ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count >= 1)
-                ChartStoreComparisonPieRight.Series["Quarterly"].Points.Clear();
+            string store = CBStoreComparisonStoreToCompare.Text;
 
-            if (ChartStoreComparisonLineRight.Series["2013"].Points.Count >= 1)
+            Task task = new Task(() => PopulateComparisonData(ChartStoreComparisonPieRight, ChartStoreComparisonLineRight, store));
+            task.Start();
+        }
+
+        #endregion
+
+        private void PopulateComparisonData(Chart pieChart, Chart lineChart, string storeToSearch)
+        {
+            if (pieChart.Series["Quarterly"].Points.Count >= 1)
+                pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points.Clear()));
+
+            if (lineChart.Series["2013"].Points.Count >= 1)
             {
-                ChartStoreComparisonLineRight.Series["2013"].Points.Clear();
-                ChartStoreComparisonLineRight.Series["2014"].Points.Clear();
+                lineChart.Series["2013"].Points.Clear();
+                lineChart.Series["2014"].Points.Clear();
             }
 
-            string store = CBStoreComparisonStoreToCompare.Text;
+            string store = storeToSearch;
 
             double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
                                            .Select(order => order.cost)
@@ -703,25 +633,25 @@ namespace TBSEAssessmentOne
                                            .Select(order => order.cost)
                                            .Sum();
 
-            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("C2"));
-            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
-            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
-            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
+            pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("C2"))));
+            pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("C2"))));
+            pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("C2"))));
+            pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("C2"))));
 
             string[] quarters = new string[4] { "First quarter", "Second quarter", "Third quarter", "Fourth quarter" };
-            for (int i = 0; i < ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count; i++)
+            for (int i = 0; i < pieChart.Series["Quarterly"].Points.Count; i++)
             {
-                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].LegendText = quarters[i];
-                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].Label = ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].YValues[0].ToString("C2");
+                pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points[i].LegendText = quarters[i]));
+                pieChart.Invoke(new Action(() => pieChart.Series["Quarterly"].Points[i].Label = pieChart.Series["Quarterly"].Points[i].YValues[0].ToString("C2")));
             }
 
 
-            ChartStoreComparisonPieRight.Titles[0].Text = store;
-            ChartStoreComparisonPieRight.Show();
+            pieChart.Invoke(new Action(() => pieChart.Titles[0].Text = store));
+            pieChart.Invoke(new Action(() => pieChart.Show()));
 
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
-            richTextBox1.Text += "14 total cost: " + totalCost + ": " + ChartStoreComparisonPieRight.Text + '\n';
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "14 total cost: " + totalCost + ": " + pieChart.Name + '\n'));
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -752,16 +682,14 @@ namespace TBSEAssessmentOne
 
             for (int i = 0; i < 12; i++)
             {
-                ChartStoreComparisonLineRight.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
-                ChartStoreComparisonLineRight.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
+                lineChart.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
+                lineChart.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
             }
 
 
-            ChartStoreComparisonLineRight.Show();
+            lineChart.Show();
 
-            richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
+            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n'));
         }
-
-        #endregion
     }
 }
