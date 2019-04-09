@@ -59,23 +59,36 @@ namespace TBSEAssessmentOne
             openFileDialog.Filter = "CSV files|*.csv";
             openFileDialog.Title = "File";
 
+            // Remove any previous data that is stored in the dictionary and the concurrent queues
 
-            var t2 = Task.Factory.StartNew(() => Parallel.ForEach(queueOrder, order =>
+            TaskFactory TF = new TaskFactory();
+
+            List<Task> TL = new List<Task>();
+
+            TL.Add(TF.StartNew(() => Parallel.ForEach(queueOrder, order =>
             {
                 queueOrder.TryDequeue(out order);
-            }));
+            }),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
 
-            var t3 = Task.Factory.StartNew(() => Parallel.ForEach(queueDate, date =>
+
+            TL.Add(TF.StartNew(() => Parallel.ForEach(queueDate, date =>
             {
                 queueDate.TryDequeue(out date);
-            }));
+            }),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
 
-            var t4 = Task.Factory.StartNew(() => Stores.Clear());
 
-            Task.WaitAll(t2, t3, t4);
+            TL.Add(TF.StartNew(() => Stores.Clear(),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default));
+
+            Task.WaitAll(TL.ToArray());
+
 
             t1 = new Task(() => ReadAllData());
-
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				richTextBox2.Text = openFileDialog.FileName;
@@ -201,21 +214,39 @@ namespace TBSEAssessmentOne
             richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBSupplierTypeSearchStore.Items.Count + '\n'));
             #endregion
 
+
+
             /* Enable combo boxes for search queries */
-            CBStoreSearchStore.Invoke(new Action(() => CBStoreSearchStore.Enabled = true));
-            CBStoreSearchWeek.Invoke(new Action(() => CBStoreSearchWeek.Enabled = true));
-            CBStoreSearchYear.Invoke(new Action(() => CBStoreSearchYear.Enabled = true));
-            CBSupplierSearchSupplier.Invoke(new Action(() => CBSupplierSearchSupplier.Enabled = true));
-            CBSupplierTypeSearchSupplierType.Invoke(new Action(() => CBSupplierTypeSearchSupplierType.Enabled = true));
-            CBAllStoreSearchWeek.Invoke(new Action(() => CBAllStoreSearchWeek.Enabled = true));
-            CBAllStoreSearchSupplier.Invoke(new Action(() => CBAllStoreSearchSupplier.Enabled = true));
-            CBAllStoreSearchSupplierType.Invoke(new Action(() => CBAllStoreSearchSupplierType.Enabled = true));
-            CBSupplierSearchWeek.Invoke(new Action(() => CBSupplierSearchWeek.Enabled = true));
-            CBSupplierSearchStore.Invoke(new Action(() => CBSupplierSearchStore.Enabled = true));
-            CBSupplierTypeSearchStore.Invoke(new Action(() => CBSupplierTypeSearchStore.Enabled = true));
-            CBSupplierTypeSearchWeek.Invoke(new Action(() => CBSupplierTypeSearchWeek.Enabled = true));
-            CBStoreComparisonStore.Invoke(new Action(() => CBStoreComparisonStore.Enabled = true));
-            CBStoreComparisonStoreToCompare.Invoke(new Action(() => CBStoreComparisonStoreToCompare.Enabled = true));
+            TaskFactory TFEnableComboBoxes = new TaskFactory();
+
+            List<Task> TLCB = new List<Task>();
+
+            TLCB.Add(TFEnableComboBoxes.StartNew(() => SetComboBoxEnabled(CBStoreSearchStore),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default).ContinueWith((task) => SetComboBoxEnabled(CBStoreSearchWeek))
+                                      .ContinueWith((task => SetComboBoxEnabled(CBStoreSearchYear))));
+
+            TLCB.Add(TFEnableComboBoxes.StartNew(() => SetComboBoxEnabled(CBSupplierSearchSupplier),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default).ContinueWith((task) => SetComboBoxEnabled(CBSupplierSearchWeek))
+                                      .ContinueWith((task) => SetComboBoxEnabled(CBSupplierSearchStore)));
+
+            TLCB.Add(TFEnableComboBoxes.StartNew(() => SetComboBoxEnabled(CBSupplierTypeSearchSupplierType),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default).ContinueWith((task) => SetComboBoxEnabled(CBSupplierTypeSearchStore))
+                                      .ContinueWith((task) => SetComboBoxEnabled(CBSupplierTypeSearchWeek)));
+
+            TLCB.Add(TFEnableComboBoxes.StartNew(() => SetComboBoxEnabled(CBAllStoreSearchWeek),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default).ContinueWith((task) => SetComboBoxEnabled(CBAllStoreSearchSupplier))
+                                      .ContinueWith((task) => SetComboBoxEnabled(CBAllStoreSearchSupplierType)));
+
+            TLCB.Add(TFEnableComboBoxes.StartNew(() => SetComboBoxEnabled(CBStoreComparisonStore),
+                CancellationToken.None, TaskCreationOptions.PreferFairness,
+                TaskScheduler.Default).ContinueWith((task) => SetComboBoxEnabled(CBStoreComparisonStoreToCompare)));
+
+
+            Task.WaitAll(TLCB.ToArray());
 
             dataGridView1.Invoke(new Action(() => dataGridView1.Columns[0].HeaderText = "Store Code"));
             dataGridView1.Columns[1].HeaderText = "Store Location";
@@ -226,6 +257,11 @@ namespace TBSEAssessmentOne
             string[] data = items.ToArray();
 
             cb.Invoke(new Action(() => cb.DataSource = data));
+        }
+
+        private void SetComboBoxEnabled(ComboBox cb, bool enabled = true)
+        {
+            cb.Invoke(new Action(() => cb.Enabled = enabled));
         }
 
         private void SetDataGridViewDatasource(DataGridView dgv, List<Store> data)
