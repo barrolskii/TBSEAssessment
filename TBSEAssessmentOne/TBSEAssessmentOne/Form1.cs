@@ -22,7 +22,6 @@ namespace TBSEAssessmentOne
 		Dictionary<string, Store> Stores;
 		ConcurrentQueue<Date> queueDate;
 		ConcurrentQueue<Order> queueOrder;
-        ToolTip toolTip;
 
 		public Form1()
 		{
@@ -34,25 +33,12 @@ namespace TBSEAssessmentOne
 
 			InitComboBoxes();
 			InitDataGridViewBoxes();
-
-            chart1.Hide();
-            chart2.Hide();
-            chart3.Hide();
-            chart4.Hide();
-            chart5.Hide();
-
-            chart4.ChartAreas[0].AxisX.Minimum = 1;
-            chart4.ChartAreas[0].AxisX.Maximum = 13;
-            chart4.ChartAreas[0].AxisX.Interval = 1;
-
-            chart5.ChartAreas[0].AxisX.Minimum = 1;
-            chart5.ChartAreas[0].AxisX.Maximum = 13;
-            chart5.ChartAreas[0].AxisX.Interval = 1;
-
-            toolTip = new ToolTip();
+            InitCharts();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        #region Button click functions
+
+        private void BtnLoadFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
@@ -90,14 +76,166 @@ namespace TBSEAssessmentOne
 
             t1 = new Task(() => ReadAllData());
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-			{
-				richTextBox2.Text = openFileDialog.FileName;
+            {
+                richTextBox2.Text = openFileDialog.FileName;
 
-				t1.Start();
-			}
+                t1.Start();
+            }
 
             richTextBox1.Text += "Finished method\n";
         }
+
+        private void BtnStoreSearch_Click(object sender, EventArgs e)
+        {
+            double totalCost = 0;
+
+            Dictionary<string, double> SupplierTypeCost = new Dictionary<string, double>();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+
+            string fileToSearch = storeCSVFileLocation + "StoreData/" + CBStoreSearchStore.Text + '_' + CBStoreSearchWeek.Text + '_' + CBStoreSearchYear.Text + ".csv";
+            string[] storeData = File.ReadAllLines(fileToSearch);
+
+            /* If the cell rows already contain data then remove them */
+            if (dataGridView2.Rows.Count >= 2)
+            {
+                richTextBox1.Text += "Rows begin deleted" + '\n';
+                dataGridView2.Rows.Clear();
+            }
+
+            foreach (var s in storeData)
+            {
+                string[] orderSplit = s.Split(',');
+
+                dataGridView2.Rows.Add(orderSplit[0], orderSplit[1], orderSplit[2]);
+                totalCost += Convert.ToDouble(orderSplit[2]);
+
+                if (!SupplierTypeCost.Keys.Contains(orderSplit[1]))
+                {
+                    SupplierTypeCost.Add(orderSplit[1], Convert.ToDouble(orderSplit[2]));
+                }
+                else
+                {
+                    SupplierTypeCost[orderSplit[1]] += Convert.ToDouble(orderSplit[2]);
+                }
+            }
+
+            ChartStoreData.Show();
+
+            if (ChartStoreData.Series["Supplier costs"].Points.Count >= 1)
+                ChartStoreData.Series["Supplier costs"].Points.Clear();
+
+            foreach (var s in SupplierTypeCost)
+            {
+                ChartStoreData.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
+            }
+
+            for (int i = 0; i < ChartStoreData.Series["Supplier costs"].Points.Count; i++)
+            {
+                ChartStoreData.Series["Supplier costs"].Points[i].IsValueShownAsLabel = true;
+            }
+
+            textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
+
+            sw.Stop();
+
+            TabCtrlDataDisplay.SelectedTab = tabPage2;
+
+            /* Output for debgging purposes */
+            richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
+            richTextBox1.Text += "Row count: " + dataGridView2.Rows.Count + '\n'; // 628
+            richTextBox1.Text += "Total cost: " + totalCost.ToString("0.00") + '\n'; // 22440.79
+        }
+
+        /* Test button for temp function implementation */
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnSupplierSearchSupplier_Click(object sender, EventArgs e)
+        {
+            // Supplier
+            if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "" && CBSupplierSearchStore.Text != "")
+            {
+                string supplier = CBSupplierSearchSupplier.Text;
+                string store = CBSupplierSearchStore.Text;
+                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
+
+                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "")
+            {
+                string supplier = CBSupplierSearchSupplier.Text;
+                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
+
+                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week)
+                                                                     .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchStore.Text != "")
+            {
+                string supplier = CBSupplierSearchSupplier.Text;
+                string store = CBSupplierSearchStore.Text;
+
+                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost for a store: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else
+            {
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
+            }
+        }
+
+        private void BtnSupplierSearchSupplierType_Click(object sender, EventArgs e)
+        {
+            // Supplier type
+            if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "" && CBSupplierTypeSearchStore.Text != "")
+            {
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
+                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
+                string store = CBSupplierTypeSearchStore.Text;
+
+                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.store.storeCode == store)
+                                                                         .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "")
+            {
+                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
+
+                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week)
+                                                                         .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchStore.Text != "")
+            {
+                string supplierType = CBSupplierTypeSearchSupplierType.Text;
+                string store = CBSupplierTypeSearchStore.Text;
+
+                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store)
+                                                                         .Select(order => order.cost).Sum();
+
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost for a store: " + totalCost.ToString("0.00") + '\n'));
+            }
+            else
+            {
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
+            }
+        }
+
+        #endregion
 
         private void ReadAllData()
 		{
@@ -252,6 +390,8 @@ namespace TBSEAssessmentOne
             dataGridView1.Columns[1].HeaderText = "Store Location";
         }
 
+        #region Invokation functions
+
         private void SetComboboxData(ComboBox cb, List<string> items)
         {
             string[] data = items.ToArray();
@@ -272,158 +412,11 @@ namespace TBSEAssessmentOne
             dgv.Invoke(new Action(() => dgv.DataSource = list));
         }
 
-		private void button5_Click(object sender, EventArgs e)
-		{
-            // Supplier
-            if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "" && CBSupplierSearchStore.Text != "")
-            {
-                string supplier = CBSupplierSearchSupplier.Text;
-                string store = CBSupplierSearchStore.Text;
-                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
+        #endregion
 
-                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week && order.store.storeCode == store)
-                                             .Select(order => order.cost).Sum();
+        #region InitFunctions
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchWeek.Text != "")
-            {
-                string supplier = CBSupplierSearchSupplier.Text;
-                int week = Convert.ToInt32(CBSupplierSearchWeek.Text);
-
-                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.date.week == week)
-                                                                     .Select(order => order.cost).Sum();
-
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost in a week: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else if (CBSupplierSearchSupplier.Text != "" && CBSupplierSearchStore.Text != "")
-            {
-                string supplier = CBSupplierSearchSupplier.Text;
-                string store = CBSupplierSearchStore.Text;
-
-                double totalCost = queueOrder.Where(order => order.supplier == supplier && order.store.storeCode == store)
-                                             .Select(order => order.cost).Sum();
-
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier cost for a store: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else
-            {
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
-            }
-		}
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            // Supplier type
-            if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "" && CBSupplierTypeSearchStore.Text != "")
-            {
-                string supplierType = CBSupplierTypeSearchSupplierType.Text;
-                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
-                string store = CBSupplierTypeSearchStore.Text;
-
-                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.store.storeCode == store)
-                                                                         .Select(order => order.cost).Sum();
-
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week for a store: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchWeek.Text != "")
-            {
-                int week = Convert.ToInt32(CBSupplierTypeSearchWeek.Text);
-                string supplierType = CBSupplierTypeSearchSupplierType.Text;
-
-                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week)
-                                                                         .Select(order => order.cost).Sum();
-
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost in a week: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else if (CBSupplierTypeSearchSupplierType.Text != "" && CBSupplierTypeSearchStore.Text != "")
-            {
-                string supplierType = CBSupplierTypeSearchSupplierType.Text;
-                string store = CBSupplierTypeSearchStore.Text;
-
-                double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store)
-                                                                         .Select(order => order.cost).Sum();
-
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Supplier type cost for a store: " + totalCost.ToString("0.00") + '\n'));
-            }
-            else
-            {
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
-            }
-        }
-
-        // Function covers total cost for all orders in a week for a store Time: 00:00:00.0500830
-        private void button2_Click(object sender, EventArgs e)
-		{
-			double totalCost = 0;
-
-			Dictionary<string, double> SupplierTypeCost = new Dictionary<string, double>();
-
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-
-
-            string fileToSearch = storeCSVFileLocation + "StoreData/" + CBStoreSearchStore.Text + '_' + CBStoreSearchWeek.Text + '_' + CBStoreSearchYear.Text + ".csv";
-			string[] storeData = File.ReadAllLines(fileToSearch);
-
-			/* If the cell rows already contain data then remove them */
-            if (dataGridView2.Rows.Count >= 2)
-			{
-				richTextBox1.Text += "Rows begin deleted" + '\n';
-				dataGridView2.Rows.Clear();
-			}
-
-			foreach (var s in storeData)
-			{
-                string[] orderSplit = s.Split(',');
-
-				dataGridView2.Rows.Add(orderSplit[0], orderSplit[1], orderSplit[2]);
-				totalCost += Convert.ToDouble(orderSplit[2]);
-
-				if (!SupplierTypeCost.Keys.Contains(orderSplit[1]))
-				{
-					SupplierTypeCost.Add(orderSplit[1], Convert.ToDouble(orderSplit[2]));
-				}
-				else
-				{
-                    SupplierTypeCost[orderSplit[1]] += Convert.ToDouble(orderSplit[2]);
-				}
-			}
-
-            chart1.Show();
-
-            if (chart1.Series["Supplier costs"].Points.Count >= 1)
-                chart1.Series["Supplier costs"].Points.Clear();
-
-            foreach (var s in SupplierTypeCost)
-			{
-                chart1.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
-            }
-
-            for (int i = 0; i < chart1.Series["Supplier costs"].Points.Count; i++)
-            {
-                chart1.Series["Supplier costs"].Points[i].IsValueShownAsLabel = true;
-            }
-
-            textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
-
-            sw.Stop();
-
-			tabControl1.SelectedTab = tabPage2;
-
-			/* Output for debgging purposes */
-			richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
-			richTextBox1.Text += "Row count: " + dataGridView2.Rows.Count + '\n'; // 628
-			richTextBox1.Text += "Total cost: " + totalCost.ToString("0.00") + '\n'; // 22440.79
-		}
-
-        /* Test button for temp function implementation */
-		private void button4_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void InitComboBoxes()
+        private void InitComboBoxes()
 		{
 			/* Disable use of combo boxes until data is loaded in */
 			CBStoreSearchStore.Enabled = false;
@@ -478,13 +471,13 @@ namespace TBSEAssessmentOne
             CBSupplierSearchStore.Hide();
             label6.Hide();
             label7.Hide();
-            button5.Hide();
+            BtnSupplierSearchSupplier.Hide();
 
             CBSupplierTypeSearchStore.Hide();
             CBSupplierTypeSearchWeek.Hide();
             label11.Hide();
             label12.Hide();
-            button6.Hide();
+            BtnSupplierSearchSupplierType.Hide();
         }
 
 		private void InitDataGridViewBoxes()
@@ -500,7 +493,28 @@ namespace TBSEAssessmentOne
 			dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 		}
 
-        private void comboBox1_TextChanged(object sender, EventArgs e)
+        private void InitCharts()
+        {
+            ChartStoreData.Hide();
+            ChartStoreComparisonPieLeft.Hide();
+            ChartStoreComparisonPieRight.Hide();
+            ChartStoreComparisonLineLeft.Hide();
+            ChartStoreComparisonLineRight.Hide();
+
+            ChartStoreComparisonLineLeft.ChartAreas[0].AxisX.Minimum = 1;
+            ChartStoreComparisonLineLeft.ChartAreas[0].AxisX.Maximum = 13;
+            ChartStoreComparisonLineLeft.ChartAreas[0].AxisX.Interval = 1;
+
+            ChartStoreComparisonLineRight.ChartAreas[0].AxisX.Minimum = 1;
+            ChartStoreComparisonLineRight.ChartAreas[0].AxisX.Maximum = 13;
+            ChartStoreComparisonLineRight.ChartAreas[0].AxisX.Interval = 1;
+        }
+
+        #endregion
+
+        #region ComboBox text changed functions
+
+        private void CBStoreSearchStore_TextChanged(object sender, EventArgs e)
         {
             string store = CBStoreSearchStore.Text;
 
@@ -518,7 +532,25 @@ namespace TBSEAssessmentOne
             }
         }
 
-        private void comboBox6_TextChanged(object sender, EventArgs e)
+        private void CBSupplierSearchSupplier_TextChanged(object sender, EventArgs e)
+        {
+            CBSupplierSearchWeek.Show();
+            CBSupplierSearchStore.Show();
+            label6.Show();
+            label7.Show();
+            BtnSupplierSearchSupplier.Show();
+        }
+
+        private void CBSupplierTypeSearchSupplierType_TextChanged(object sender, EventArgs e)
+        {
+            CBSupplierTypeSearchStore.Show();
+            CBSupplierTypeSearchWeek.Show();
+            label11.Show();
+            label12.Show();
+            BtnSupplierSearchSupplierType.Show();
+        }
+
+        private void CBAllStoreSearchWeek_TextChanged(object sender, EventArgs e)
         {
             int week = Convert.ToInt32(CBAllStoreSearchWeek.Text);
 
@@ -529,7 +561,7 @@ namespace TBSEAssessmentOne
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": £" + costOfAllStoresInAWeek.ToString("0.00") + "\n"));
         }
 
-        private void comboBox7_TextChanged(object sender, EventArgs e)
+        private void CBAllStoreSearchSupplier_TextChanged(object sender, EventArgs e)
         {
             string supplier = CBAllStoreSearchSupplier.Text;
 
@@ -540,7 +572,7 @@ namespace TBSEAssessmentOne
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplier + ": £" + costOfAllOrdersForASupplier.ToString("0.00") + "\n"));
         }
 
-        private void comboBox8_TextChanged(object sender, EventArgs e)
+        private void CBAllStoreSearchSupplierType_TextChanged(object sender, EventArgs e)
         {
             string supplierType = CBAllStoreSearchSupplierType.Text;
 
@@ -551,28 +583,10 @@ namespace TBSEAssessmentOne
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplierType + ": £" + costOfAllOrdersToASupplierType.ToString("0.00") + "\n"));
         }
 
-        private void comboBox4_TextChanged(object sender, EventArgs e)
+        private void CBStoreComparisonStore_TextChanged(object sender, EventArgs e)
         {
-            CBSupplierSearchWeek.Show();
-            CBSupplierSearchStore.Show();
-            label6.Show();
-            label7.Show();
-            button5.Show();
-        }
-
-        private void comboBox5_TextChanged(object sender, EventArgs e)
-        {
-            CBSupplierTypeSearchStore.Show();
-            CBSupplierTypeSearchWeek.Show();
-            label11.Show();
-            label12.Show();
-            button6.Show();
-        }
-
-        private void comboBox13_TextChanged(object sender, EventArgs e)
-        {
-            if (chart2.Series["Quarterly"].Points.Count >= 1)
-                chart2.Series["Quarterly"].Points.Clear();
+            if (ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count >= 1)
+                ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Clear();
 
             string store = CBStoreComparisonStore.Text;
 
@@ -592,18 +606,18 @@ namespace TBSEAssessmentOne
                                            .Select(order => order.cost)
                                            .Sum();
 
-            chart2.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
-            chart2.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
-            chart2.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
-            chart2.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
+            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
+            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
+            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
+            ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
 
-            for (int i = 0; i < chart2.Series["Quarterly"].Points.Count; i++)
+            for (int i = 0; i < ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count; i++)
             {
-                chart2.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
             }
 
-            chart2.Titles[0].Text = store;
-            chart2.Show();
+            ChartStoreComparisonPieLeft.Titles[0].Text = store;
+            ChartStoreComparisonPieLeft.Show();
 
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
@@ -638,20 +652,20 @@ namespace TBSEAssessmentOne
 
             for (int i = 0; i < 12; i++)
             {
-                chart4.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
-                chart4.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
+                ChartStoreComparisonLineLeft.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
+                ChartStoreComparisonLineLeft.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
             }
 
 
-            chart4.Show();
+            ChartStoreComparisonLineLeft.Show();
 
             richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
         }
 
-        private void comboBox14_TextChanged(object sender, EventArgs e)
+        private void CBStoreComparisonStoreToCompare_TextChanged(object sender, EventArgs e)
         {
-            if (chart3.Series["Quarterly"].Points.Count >= 1)
-                chart3.Series["Quarterly"].Points.Clear();
+            if (ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count >= 1)
+                ChartStoreComparisonPieRight.Series["Quarterly"].Points.Clear();
 
             string store = CBStoreComparisonStoreToCompare.Text;
 
@@ -671,23 +685,23 @@ namespace TBSEAssessmentOne
                                            .Select(order => order.cost)
                                            .Sum();
 
-            chart3.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
-            chart3.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
-            chart3.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
-            chart3.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
+            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
+            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
+            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
+            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
 
-            for (int i = 0; i < chart3.Series["Quarterly"].Points.Count; i++)
+            for (int i = 0; i < ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count; i++)
             {
-                chart3.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
             }
 
 
-            chart3.Titles[0].Text = store;
-            chart3.Show();
+            ChartStoreComparisonPieRight.Titles[0].Text = store;
+            ChartStoreComparisonPieRight.Show();
 
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
-            richTextBox1.Text += "14 total cost: " + totalCost + ": " + chart3.Text + '\n';
+            richTextBox1.Text += "14 total cost: " + totalCost + ": " + ChartStoreComparisonPieRight.Text + '\n';
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -695,7 +709,7 @@ namespace TBSEAssessmentOne
             double[] monthOrders2013 = new double[12];
             double[] monthOrders2014 = new double[12];
 
-            Parallel.For(0, 12, (i) => 
+            Parallel.For(0, 12, (i) =>
             {
                 double weekTotal = queueOrder.Where(order => order.date.year == 2013 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
@@ -718,14 +732,16 @@ namespace TBSEAssessmentOne
 
             for (int i = 0; i < 12; i++)
             {
-                chart5.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
-                chart5.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
+                ChartStoreComparisonLineRight.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
+                ChartStoreComparisonLineRight.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
             }
 
 
-            chart5.Show();
+            ChartStoreComparisonLineRight.Show();
 
             richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
         }
+
+        #endregion
     }
 }
