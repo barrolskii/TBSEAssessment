@@ -41,6 +41,14 @@ namespace TBSEAssessmentOne
             chart4.Hide();
             chart5.Hide();
 
+            chart4.ChartAreas[0].AxisX.Minimum = 1;
+            chart4.ChartAreas[0].AxisX.Maximum = 13;
+            chart4.ChartAreas[0].AxisX.Interval = 1;
+
+            chart5.ChartAreas[0].AxisX.Minimum = 1;
+            chart5.ChartAreas[0].AxisX.Maximum = 13;
+            chart5.ChartAreas[0].AxisX.Interval = 1;
+
             toolTip = new ToolTip();
         }
 
@@ -559,6 +567,44 @@ namespace TBSEAssessmentOne
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
             richTextBox1.Text += "13 total cost: " + totalCost + '\n';
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            double[] monthOrders2013 = new double[12];
+            double[] monthOrders2014 = new double[12];
+
+            Parallel.For(0, 12, (i) =>
+            {
+                double weekTotal = queueOrder.Where(order => order.date.year == 2013 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                monthOrders2013[i] = weekTotal;
+            });
+
+            Parallel.For(0, 12, (i) =>
+            {
+                double weekTotal = queueOrder.Where(order => order.date.year == 2014 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                monthOrders2014[i] = weekTotal;
+            });
+
+            stopwatch.Stop();
+
+            string[] months = Enum.GetNames(typeof(Months));
+
+
+            for (int i = 0; i < 12; i++)
+            {
+                chart4.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
+                chart4.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
+            }
+
+
+            chart4.Show();
+
+            richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
         }
 
         private void comboBox14_TextChanged(object sender, EventArgs e)
@@ -605,20 +651,38 @@ namespace TBSEAssessmentOne
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double[] foo = new double[12];
+            double[] monthOrders2013 = new double[12];
+            double[] monthOrders2014 = new double[12];
 
             Parallel.For(0, 12, (i) => 
             {
                 double weekTotal = queueOrder.Where(order => order.date.year == 2013 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
                                              .Select(order => order.cost).Sum();
 
-                foo[i] = weekTotal;
+                monthOrders2013[i] = weekTotal;
+            });
+
+            Parallel.For(0, 12, (i) =>
+            {
+                double weekTotal = queueOrder.Where(order => order.date.year == 2014 && Math.Ceiling(order.date.week / 4.0) == i + 1 && order.store.storeCode == store)
+                                             .Select(order => order.cost).Sum();
+
+                monthOrders2014[i] = weekTotal;
             });
 
             stopwatch.Stop();
-            
-            // TODO: Add data to the graph
 
+            string[] months = Enum.GetNames(typeof(Months));
+
+
+            for (int i = 0; i < 12; i++)
+            {
+                chart5.Series["2013"].Points.AddXY(months[i], monthOrders2013[i]);
+                chart5.Series["2014"].Points.AddXY(months[i], monthOrders2014[i]);
+            }
+
+
+            chart5.Show();
 
             richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n';
         }

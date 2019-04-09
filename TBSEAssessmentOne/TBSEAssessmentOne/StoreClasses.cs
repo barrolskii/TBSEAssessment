@@ -27,4 +27,20 @@ namespace TBSEAssessmentOne
 		public string supplierType { get; set; }
 		public double cost { get; set; }
 	}
+
+    enum Months
+    {
+        Jan = 0,
+        Feb,
+        Mar,
+        Apr,
+        May,
+        Jun,
+        Jul,
+        Aug,
+        Sep,
+        Oct,
+        Nov,
+        Dec
+    }
 }
