@@ -127,21 +127,24 @@ namespace TBSEAssessmentOne
             if (ChartStoreData.Series["Supplier costs"].Points.Count >= 1)
                 ChartStoreData.Series["Supplier costs"].Points.Clear();
 
+            List<string> supplierTypeNames = new List<string>();
             foreach (var s in SupplierTypeCost)
             {
                 ChartStoreData.Series["Supplier costs"].Points.AddXY(s.Key, s.Value);
+                supplierTypeNames.Add(s.Key);
             }
 
             for (int i = 0; i < ChartStoreData.Series["Supplier costs"].Points.Count; i++)
             {
-                ChartStoreData.Series["Supplier costs"].Points[i].IsValueShownAsLabel = true;
+                ChartStoreData.Series["Supplier costs"].Points[i].LegendText = supplierTypeNames[i];
+                ChartStoreData.Series["Supplier costs"].Points[i].Label = ChartStoreData.Series["Supplier costs"].Points[i].YValues[0].ToString("C2");
             }
 
             textBox2.Text = "Total cost: £" + totalCost.ToString("0.00");
 
             sw.Stop();
 
-            TabCtrlDataDisplay.SelectedTab = tabPage2;
+            TabCtrlDataDisplay.SelectedTab = StoreData;
 
             /* Output for debgging purposes */
             richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
@@ -469,14 +472,14 @@ namespace TBSEAssessmentOne
             // Hide the supplier search combo boxes and buttons until relevant data is added
             CBSupplierSearchWeek.Hide();
             CBSupplierSearchStore.Hide();
-            label6.Hide();
-            label7.Hide();
+            LblSupplierSearchSupplierWeek.Hide();
+            LblSupplierSearchSupplierStore.Hide();
             BtnSupplierSearchSupplier.Hide();
 
             CBSupplierTypeSearchStore.Hide();
             CBSupplierTypeSearchWeek.Hide();
-            label11.Hide();
-            label12.Hide();
+            LblSupplierSearchSupplierTypeStore.Hide();
+            LblSupplierSearchSupplierTypeWeek.Hide();
             BtnSupplierSearchSupplierType.Hide();
         }
 
@@ -536,8 +539,8 @@ namespace TBSEAssessmentOne
         {
             CBSupplierSearchWeek.Show();
             CBSupplierSearchStore.Show();
-            label6.Show();
-            label7.Show();
+            LblSupplierSearchSupplierWeek.Show();
+            LblSupplierSearchSupplierStore.Show();
             BtnSupplierSearchSupplier.Show();
         }
 
@@ -545,8 +548,8 @@ namespace TBSEAssessmentOne
         {
             CBSupplierTypeSearchStore.Show();
             CBSupplierTypeSearchWeek.Show();
-            label11.Show();
-            label12.Show();
+            LblSupplierSearchSupplierTypeStore.Show();
+            LblSupplierSearchSupplierTypeWeek.Show();
             BtnSupplierSearchSupplierType.Show();
         }
 
@@ -588,6 +591,13 @@ namespace TBSEAssessmentOne
             if (ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count >= 1)
                 ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Clear();
 
+            if (ChartStoreComparisonLineLeft.Series["2013"].Points.Count >= 1)
+            {
+                ChartStoreComparisonLineLeft.Series["2013"].Points.Clear();
+                ChartStoreComparisonLineLeft.Series["2014"].Points.Clear();
+            }
+
+
             string store = CBStoreComparisonStore.Text;
 
             double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
@@ -611,9 +621,11 @@ namespace TBSEAssessmentOne
             ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
             ChartStoreComparisonPieLeft.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
 
+            string[] quarters = new string[4] { "First quarter", "Second quarter", "Third quarter", "Fourth quarter" };
             for (int i = 0; i < ChartStoreComparisonPieLeft.Series["Quarterly"].Points.Count; i++)
             {
-                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].LegendText = quarters[i];
+                ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].Label = ChartStoreComparisonPieLeft.Series["Quarterly"].Points[i].YValues[0].ToString("C2");
             }
 
             ChartStoreComparisonPieLeft.Titles[0].Text = store;
@@ -667,6 +679,12 @@ namespace TBSEAssessmentOne
             if (ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count >= 1)
                 ChartStoreComparisonPieRight.Series["Quarterly"].Points.Clear();
 
+            if (ChartStoreComparisonLineRight.Series["2013"].Points.Count >= 1)
+            {
+                ChartStoreComparisonLineRight.Series["2013"].Points.Clear();
+                ChartStoreComparisonLineRight.Series["2014"].Points.Clear();
+            }
+
             string store = CBStoreComparisonStoreToCompare.Text;
 
             double quarterOne = queueOrder.Where(order => order.store.storeCode == store && order.date.week >= 1 && order.date.week <= 13)
@@ -685,14 +703,16 @@ namespace TBSEAssessmentOne
                                            .Select(order => order.cost)
                                            .Sum();
 
-            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("0.00"));
+            ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("First quarter", quarterOne.ToString("C2"));
             ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Second quarter", quarterTwo.ToString("0.00"));
             ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Third quarter", quarterThree.ToString("0.00"));
             ChartStoreComparisonPieRight.Series["Quarterly"].Points.AddXY("Fourth quarter", quarterFour.ToString("0.00"));
 
+            string[] quarters = new string[4] { "First quarter", "Second quarter", "Third quarter", "Fourth quarter" };
             for (int i = 0; i < ChartStoreComparisonPieRight.Series["Quarterly"].Points.Count; i++)
             {
-                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].IsValueShownAsLabel = true;
+                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].LegendText = quarters[i];
+                ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].Label = ChartStoreComparisonPieRight.Series["Quarterly"].Points[i].YValues[0].ToString("C2");
             }
 
 
