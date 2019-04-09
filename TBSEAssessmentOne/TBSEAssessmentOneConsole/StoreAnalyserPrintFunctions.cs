@@ -80,7 +80,7 @@ namespace TBSEAssessmentOneConsole
         private void TotalCostOfAllOrders()
         {
             double totalCost = queueOrder.Sum(order => order.cost);
-            Console.WriteLine("Total cost of all orders is: £{0}", totalCost);
+            Console.WriteLine("Total cost of all orders is: {0}", totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -101,7 +101,7 @@ namespace TBSEAssessmentOneConsole
             while (true);
 
             double totalCost = queueOrder.Where(order => order.store.storeCode == store).Select(order => order.cost).Sum();
-            Console.WriteLine("{0} total order cost: £{1}", store, totalCost);
+            Console.WriteLine("{0} total order cost: {1}", store, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -113,7 +113,7 @@ namespace TBSEAssessmentOneConsole
             int week = Convert.ToInt32(Console.ReadLine());
 
             double totalCost = queueOrder.Where(order => order.date.week == week).Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost of all orders for week {0}: £{1}", week, totalCost);
+            Console.WriteLine("Total cost of all orders for week {0}: {1}", week, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -164,7 +164,7 @@ namespace TBSEAssessmentOneConsole
             while (true);
 
             double totalCost = queueOrder.Where(order => order.date.week == week && order.store.storeCode == store && order.date.year == year).Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost of all orders for {0} in week {1}: £{2}", store, week, totalCost);
+            Console.WriteLine("Total cost of all orders for {0} in week {1}: {2}", store, week, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -176,7 +176,7 @@ namespace TBSEAssessmentOneConsole
             string supplier = Console.ReadLine();
 
             double totalCost = queueOrder.Where(order => order.supplier == supplier).Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost for {0} orders: £{1}", supplier, totalCost);
+            Console.WriteLine("Total cost for {0} orders: {1}", supplier, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -188,7 +188,7 @@ namespace TBSEAssessmentOneConsole
             string supplierType = Console.ReadLine();
 
             double totalCost = queueOrder.Where(order => order.supplierType == supplierType).Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost for {0}: £{1}", supplierType, totalCost);
+            Console.WriteLine("Total cost for {0}: {1}", supplierType, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -232,7 +232,7 @@ namespace TBSEAssessmentOneConsole
             double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.date.week == week && order.date.year == year)
                                          .Select(order => order.cost).Sum();
 
-            Console.WriteLine("Total cost for {0} in week {1}: £{2}", supplierType, week, totalCost);
+            Console.WriteLine("Total cost for {0} in week {1}: {2}", supplierType, week, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -256,7 +256,7 @@ namespace TBSEAssessmentOneConsole
             while (true);
 
             double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store).Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost for {0} in store {1}: £{2}", supplierType, store, totalCost.ToString("0.00"));
+            Console.WriteLine("Total cost for {0} in store {1}: {2}", supplierType, store, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
@@ -311,7 +311,7 @@ namespace TBSEAssessmentOneConsole
 
             double totalCost = queueOrder.Where(order => order.supplierType == supplierType && order.store.storeCode == store && order.date.week == week && order.date.year == year)
                                          .Select(order => order.cost).Sum();
-            Console.WriteLine("Total cost for {0} in store {1} for week {2}: £{3}", supplierType, store, week, totalCost);
+            Console.WriteLine("Total cost for {0} in store {1} for week {2}: {3}", supplierType, store, week, totalCost.ToString("C2"));
 
             Console.WriteLine("\nPress any key to continue");
             Console.ReadLine();
