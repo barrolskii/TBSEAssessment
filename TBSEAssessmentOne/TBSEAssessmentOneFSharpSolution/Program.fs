@@ -71,7 +71,7 @@ let CostOfAllOrdersInAWeekToASupplierTypeForAStore() =
     printfn "Called"
 
 
-let HandleInput(input) =
+let HandleInput(input: string) =
     match input with
     | "1" -> TotalCostOfAllOrders()
     | "2" -> CostOfAllOrdersForASingleStore()
@@ -85,8 +85,7 @@ let HandleInput(input) =
     | _ -> printfn "Please select a valid option or enter q to quit"
 
 
-let CheckCommands() =
-    let input = Console.ReadLine()
+let CheckCommands(input: string) =
     match input with
     | "-h" -> PrintCommands()
     | "-help" -> PrintCommands()
@@ -132,6 +131,16 @@ type Order =
     end
 
 
+let MainLoop() = 
+    let mutable quit = false
+    while quit <> true do
+        let input = Console.ReadLine()
+
+        match input with
+        | "q" -> quit <- true
+        | _ -> CheckCommands(input)
+
+
 [<EntryPoint>]
 let main argv = 
     let test = new Date(2, 2014)
@@ -151,6 +160,7 @@ let main argv =
     printfn "type: %s" test3.supplierType
     printfn "cost: %g" test3.cost
 
-    CheckCommands()
+    MainLoop()
+    printfn "Goodbye"
     Console.ReadKey()
     0 // return an integer exit code
