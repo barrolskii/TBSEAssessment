@@ -3,6 +3,7 @@ open System.IO
 open System.Collections.Generic
 open System.Collections.Concurrent
 open System.Threading.Tasks
+open System.Diagnostics
 
 // File path for reference
 // @C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
@@ -158,6 +159,8 @@ let TestStructFunc() =
 
 
 let MainLoop() = 
+    PrintSelectionOptions()
+
     let mutable quit = false
     while quit <> true do
         let input = Console.ReadLine()
@@ -165,56 +168,6 @@ let MainLoop() =
         match input with
         | "q" -> quit <- true
         | _ -> CheckInput(input)
-
-
-(*type Data() = 
-    member x.ReadAllData() =
-        use stream = new StreamReader @"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\StoreCodes.csv"
-
-
-        let folderPath: string = "StoreData"
-        let storeCodesFile: string = "StoreCodes.csv"
-
-        let mutable valid = true
-        let stores = new Dictionary<string, Store>()
-        let dates = new List<Date>()
-        let orders = new List<Order>()
-
-        while (valid) do
-            let line = stream.ReadLine()
-            if (line = null) then
-                valid <- false
-            else
-                let lineSplit = line.Split ','
-                let store: Store = new Store(lineSplit.[0], lineSplit.[1])
-                stores.Add(lineSplit.[0], store)
-
-
-        let fileNames: string[] = Directory.GetFiles(@"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\StoreData")
-        
-
-        for file in fileNames do
-            let fileName: string = Path.GetFileNameWithoutExtension(file)
-            let fileNameSplit: string[] = fileName.Split '_'
-
-            let store: Store = stores.[fileNameSplit.[0]]
-
-            let date: Date = new Date(Convert.ToInt32(fileNameSplit.[1]), Convert.ToInt32(fileNameSplit.[2]))
-            dates.Add(date)
-
-            let data: string[] = File.ReadAllLines(file)
-            for s in data do
-                let fileData = s.Split ','
-
-                let order: Order = new Order(store, date, fileData.[0], fileData.[1], Convert.ToDouble(fileData.[2]))
-                orders.Add(order)
-
-
-        printfn "filenames: %d" fileNames.Length
-        printfn "orders: %d" orders.Count
-        printfn "dates: %d" dates.Count
-        printfn "Finished"*)
-
 
 type Data() =
     member x.ReadAllData() =
@@ -229,6 +182,9 @@ type Data() =
         let stores = new Dictionary<string, Store>()
         let dates = new ConcurrentQueue<Date>()
         let orders = new ConcurrentQueue<Order>()
+
+        let sw = new Stopwatch()
+        sw.Start()
 
         while (valid) do
             let line = stream.ReadLine()
@@ -259,6 +215,9 @@ type Data() =
                     orders.Enqueue(order)
         ))
 
+        sw.Stop();
+
+        printfn "Time: %A" sw.Elapsed
         printfn "Order: %d" orders.Count
         printfn "dates: %d" dates.Count
         printfn "stores: %d" stores.Keys.Count
