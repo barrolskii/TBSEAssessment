@@ -1,4 +1,8 @@
 ﻿open System
+open System.IO
+
+// File path for reference
+// @C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
 
 let PrintCommands() =
     printfn "===================================================================================\n"
@@ -85,7 +89,7 @@ let HandleInput(input: string) =
     | _ -> printfn "Please select a valid option or enter q to quit"
 
 
-let CheckCommands(input: string) =
+let CheckInput(input: string) =
     match input with
     | "-h" -> PrintCommands()
     | "-help" -> PrintCommands()
@@ -131,18 +135,7 @@ type Order =
     end
 
 
-let MainLoop() = 
-    let mutable quit = false
-    while quit <> true do
-        let input = Console.ReadLine()
-
-        match input with
-        | "q" -> quit <- true
-        | _ -> CheckCommands(input)
-
-
-[<EntryPoint>]
-let main argv = 
+let TestStructFunc() = 
     let test = new Date(2, 2014)
     printfn "week %d" test.week
     printfn "year %d" test.year
@@ -160,7 +153,64 @@ let main argv =
     printfn "type: %s" test3.supplierType
     printfn "cost: %g" test3.cost
 
-    MainLoop()
+
+let MainLoop() = 
+    let mutable quit = false
+    while quit <> true do
+        let input = Console.ReadLine()
+
+        match input with
+        | "q" -> quit <- true
+        | _ -> CheckInput(input)
+
+
+type Data() = 
+    member x.Read() =
+        use stream = new StreamReader @"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\StoreCodes.csv"
+
+        let testMap =
+            let mutable m = Map.empty
+            let mutable valid = true
+            while (valid) do
+                let line = stream.ReadLine()
+                if (line = null) then
+                    valid <- false
+                else
+                    let foo = line.Split ','
+                    printfn "%s %s" foo.[0] foo.[1]
+
+
+        printfn "%A" testMap
+        (*let storeListMap = Map.empty
+
+        let mutable valid = true
+        let mutable bar = 0
+        while (valid) do
+            let line = stream.ReadLine()
+            if (line = null) then
+                valid <- false
+            else
+                let foo = line.Split ','
+                Add(foo.[0], foo.[1])*)
+            
+
+
+let students =
+    Map.empty. (* Creating an empty Map *)
+        Add("Zara Ali", "1501").
+        Add("Rishita Gupta", "1502").
+        Add("Robin Sahoo", "1503").
+        Add("Gillian Megan", "1504");;
+printfn "Map - students: %A" students
+
+[<EntryPoint>]
+let main argv = 
+    //let data = new Data()
+    //data.Read()
+
+
+
+    //MainLoop()
     printfn "Goodbye"
-    Console.ReadKey()
+    //Console.ReadKey()
     0 // return an integer exit code
