@@ -35,9 +35,59 @@ let PrintSuppliers() =
     printfn "Print suppliers"
 
 
-let foo() =
-    let bar = Console.ReadLine()
-    match bar with
+let TotalCostOfAllOrders() =
+    printfn "Called"
+
+
+let CostOfAllOrdersForASingleStore() =
+    printfn "Called"
+
+
+let CostOfAllOrdersInAWeekForAllStores() =
+    printfn "Called"
+
+
+let CostOfAllOrdersInASingleWeekForAStore() =
+    printfn "Called"
+
+
+let CostOfAllOrdersToASupplier() =
+    printfn "Called"
+
+
+let CostOfAllOrdersToASupplierType() =
+    printfn "Called"
+
+
+let CostOfAllOrdersInAWeekToASupplierType() =
+    printfn "Called"
+
+
+let CostOfAllOrdersToASupplierTypeForAStore() =
+    printfn "Called"
+
+
+let CostOfAllOrdersInAWeekToASupplierTypeForAStore() =
+    printfn "Called"
+
+
+let HandleInput(input) =
+    match input with
+    | "1" -> TotalCostOfAllOrders()
+    | "2" -> CostOfAllOrdersForASingleStore()
+    | "3" -> CostOfAllOrdersInAWeekForAllStores()
+    | "4" -> CostOfAllOrdersInASingleWeekForAStore()
+    | "5" -> CostOfAllOrdersToASupplier()
+    | "6" -> CostOfAllOrdersToASupplierType()
+    | "7" -> CostOfAllOrdersInAWeekToASupplierType()
+    | "8" -> CostOfAllOrdersToASupplierTypeForAStore()
+    | "9" -> CostOfAllOrdersInAWeekToASupplierTypeForAStore()
+    | _ -> printfn "Please select a valid option or enter q to quit"
+
+
+let CheckCommands() =
+    let input = Console.ReadLine()
+    match input with
     | "-h" -> PrintCommands()
     | "-help" -> PrintCommands()
     | "-ps" -> PrintStores()
@@ -46,13 +96,16 @@ let foo() =
     | "-printsuppliertypes" -> PrintSupplierTypes()
     | "-psup" -> PrintSuppliers()
     | "-printsuppliers" -> PrintSuppliers()
-    | _ -> printfn "Boi"
+    | _ -> HandleInput(input)
 
 
 type Date = 
     struct
         val week: int
         val year: int
+
+        new (initWeek, initYear) =
+            { week = initWeek; year = initYear }
     end
 
 
@@ -60,6 +113,9 @@ type Store =
     struct
         val storeCode: string
         val storeLoc: string
+
+        new (code, loc) =
+            { storeCode = code; storeLoc = loc }
     end
 
 
@@ -70,11 +126,31 @@ type Order =
         val supplier: string
         val supplierType: string
         val cost: double
+
+        new (s, d, sup, supt, c) =
+            { store = s; date = d; supplier = sup; supplierType = supt; cost = c; }
     end
 
-[<EntryPoint>]
-let main argv =
-    foo()
 
-    printfn "Hello World from F#!"
+[<EntryPoint>]
+let main argv = 
+    let test = new Date(2, 2014)
+    printfn "week %d" test.week
+    printfn "year %d" test.year
+
+    let test2 = new Store("NEW1", "Newport")
+    printfn "\ncode %s" test2.storeCode
+    printfn "loc %s" test2.storeLoc
+
+    let test3 = new Order(test2, test, "Heinz", "Food", 2.80)
+    printfn "\ncode: %s" test3.store.storeCode
+    printfn "loc: %s" test3.store.storeLoc
+    printfn "week: %d" test3.date.week
+    printfn "year: %d" test3.date.year
+    printfn "supplier: %s" test3.supplier
+    printfn "type: %s" test3.supplierType
+    printfn "cost: %g" test3.cost
+
+    CheckCommands()
+    Console.ReadKey()
     0 // return an integer exit code
