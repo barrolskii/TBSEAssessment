@@ -4,9 +4,47 @@ open System.Collections.Generic
 open System.Collections.Concurrent
 open System.Threading.Tasks
 open System.Diagnostics
+open System.Linq
+
 
 // File path for reference
 // @C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
+
+type Date = 
+    struct
+        val week: int
+        val year: int
+
+        new (initWeek, initYear) =
+            { week = initWeek; year = initYear }
+    end
+
+
+type Store =
+    struct
+        val storeCode: string
+        val storeLoc: string
+
+        new (code, loc) =
+            { storeCode = code; storeLoc = loc }
+    end
+
+
+type Order =
+    struct
+        val store: Store
+        val date: Date
+        val supplier: string
+        val supplierType: string
+        val cost: double
+
+        new (s, d, sup, supt, c) =
+            { store = s; date = d; supplier = sup; supplierType = supt; cost = c; }
+    end
+
+let stores = new Dictionary<string, Store>()
+let dates = new ConcurrentQueue<Date>()
+let orders = new ConcurrentQueue<Order>()
 
 let PrintCommands() =
     printfn "===================================================================================\n"
@@ -32,15 +70,22 @@ let PrintSelectionOptions() =
 
 
 let PrintStores() =
-    printfn "Print stores"
+    for store in stores do
+        printfn "%s : %s" store.Key store.Value.storeLoc
 
 
 let PrintSupplierTypes() =
-    printfn "Print supplier types"
+    let supplierTypes = orders.AsParallel().Select(fun order -> order.supplierType).Distinct().OrderBy(fun order -> order)
+
+    for supplierType in supplierTypes do
+        printfn "%s" supplierType
 
 
 let PrintSuppliers() =
-    printfn "Print suppliers"
+    let suppliers = orders.AsParallel().Select(fun order -> order.supplier).Distinct().OrderBy(fun order -> order)
+
+    for supplier in suppliers do
+        printfn "%s" supplier
 
 
 let TotalCostOfAllOrders() =
@@ -106,38 +151,6 @@ let CheckInput(input: string) =
     | _ -> HandleInput(input)
 
 
-type Date = 
-    struct
-        val week: int
-        val year: int
-
-        new (initWeek, initYear) =
-            { week = initWeek; year = initYear }
-    end
-
-
-type Store =
-    struct
-        val storeCode: string
-        val storeLoc: string
-
-        new (code, loc) =
-            { storeCode = code; storeLoc = loc }
-    end
-
-
-type Order =
-    struct
-        val store: Store
-        val date: Date
-        val supplier: string
-        val supplierType: string
-        val cost: double
-
-        new (s, d, sup, supt, c) =
-            { store = s; date = d; supplier = sup; supplierType = supt; cost = c; }
-    end
-
 
 let TestStructFunc() = 
     let test = new Date(2, 2014)
@@ -179,9 +192,6 @@ type Data() =
         let storeCodesFile: string = "StoreCodes.csv"
         let mutable valid = true
 
-        let stores = new Dictionary<string, Store>()
-        let dates = new ConcurrentQueue<Date>()
-        let orders = new ConcurrentQueue<Order>()
 
         let sw = new Stopwatch()
         sw.Start()
