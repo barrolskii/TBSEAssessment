@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 
 let PrintCommands() =
     printfn "===================================================================================\n"
@@ -50,6 +48,29 @@ let foo() =
     | "-printsuppliers" -> PrintSuppliers()
     | _ -> printfn "Boi"
 
+
+type Date = 
+    struct
+        val week: int
+        val year: int
+    end
+
+
+type Store =
+    struct
+        val storeCode: string
+        val storeLoc: string
+    end
+
+
+type Order =
+    struct
+        val store: Store
+        val date: Date
+        val supplier: string
+        val supplierType: string
+        val cost: double
+    end
 
 [<EntryPoint>]
 let main argv =
