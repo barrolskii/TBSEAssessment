@@ -6,7 +6,6 @@ open System.Threading.Tasks
 open System.Diagnostics
 open System.Linq
 
-
 // File path for reference
 // @C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
 
@@ -89,39 +88,100 @@ let PrintSuppliers() =
 
 
 let TotalCostOfAllOrders() =
-    printfn "Called"
+    let totalCost: double = orders.Sum(fun order -> order.cost)
+
+    printfn "Total cost of all orders is: %.2f" totalCost
 
 
 let CostOfAllOrdersForASingleStore() =
-    printfn "Called"
+    printfn "Please enter the store you would like to search"
+    let store: string = Console.ReadLine()
+
+    let totalCost: double = orders.Where(fun order -> order.store.storeCode = store).Select(fun order -> order.cost).Sum()
+    printfn "Total cost of orders for %s is: %.2f" store totalCost
 
 
 let CostOfAllOrdersInAWeekForAllStores() =
-    printfn "Called"
+    printfn "Please enter the week you want to search"
+    let week: int = Convert.ToInt32(Console.ReadLine())
+
+    let totalCost: double = orders.Where(fun order -> order.date.week = week).Select(fun order -> order.cost).Sum()
+    printfn "Total cost of all orders for week %d: %.2f" week totalCost
 
 
 let CostOfAllOrdersInASingleWeekForAStore() =
-    printfn "Called"
+    printfn "Please enter the week you want to search"
+    let week: int = Convert.ToInt32(Console.ReadLine())
+
+    printfn "Please enter the store you want to search"
+    let store: string = Console.ReadLine()
+
+    printfn "Enter the year you would like to search"
+    let year: int = Convert.ToInt32(Console.ReadLine())
+
+    let totalCost: double = orders.Where(fun order -> order.date.week = week && order.store.storeCode = store && order.date.year = year).Select(fun order -> order.cost).Sum()
+    printfn "Total cost of all orders for %s in week %d: %.2f" store week totalCost
 
 
 let CostOfAllOrdersToASupplier() =
-    printfn "Called"
+    printfn "Please enter the supplier you want to search"
+    let supplier: string = Console.ReadLine()
+
+    let totalCost: double = orders.Where(fun order -> order.supplier = supplier).Select(fun order -> order.cost).Sum()
+    printfn "Total cost for %s: %.2f" supplier totalCost
 
 
 let CostOfAllOrdersToASupplierType() =
-    printfn "Called"
+    printfn "Please enter the supplier type you want to search"
+    let supplierType: string = Console.ReadLine()
+
+    let totalCost: double = orders.Where(fun order -> order.supplierType = supplierType).Select(fun order -> order.cost).Sum()
+    printfn "Total cost for %s: %.2f" supplierType totalCost
 
 
 let CostOfAllOrdersInAWeekToASupplierType() =
-    printfn "Called"
+    printfn "Please enter the supplier type you want to search"
+    let supplierType: string = Console.ReadLine()
+
+    printfn "Please enter the week you want to search"
+    let week: int = Convert.ToInt32(Console.ReadLine())
+
+    printfn "Enter the year you would like to search"
+    let year: int = Convert.ToInt32(Console.ReadLine())
+
+    let totalCost: double = orders.Where(fun order -> order.supplierType = supplierType && order.date.week = week && order.date.year = year).Select(fun order -> order.cost).Sum()
+    printfn "Total cost for %s in week %d: %.2f" supplierType week totalCost
 
 
 let CostOfAllOrdersToASupplierTypeForAStore() =
-    printfn "Called"
+    printfn "Please enter the supplier type you want to search"
+    let supplierType: string = Console.ReadLine()
+
+    printfn "Please enter the store you would like to search"
+    let store: string = Console.ReadLine()
+
+    let totalCost: double = orders.Where(fun order -> order.store.storeCode = store && order.supplierType = supplierType).Select(fun order -> order.cost).Sum()
+    printfn "Total cost for %s in store %s: %.2f" supplierType store totalCost
 
 
 let CostOfAllOrdersInAWeekToASupplierTypeForAStore() =
-    printfn "Called"
+    printfn "Please enter the supplier type you want to search"
+    let supplierType: string = Console.ReadLine()
+
+    printfn "Please enter the store you would like to search"
+    let store: string = Console.ReadLine()
+
+    printfn "Please enter the week you want to search"
+    let week: int = Convert.ToInt32(Console.ReadLine())
+
+    printfn "Enter the year you would like to search"
+    let year: int = Convert.ToInt32(Console.ReadLine())
+
+    let totalCost: double = orders.Where(fun order -> order.supplierType = supplierType && order.store.storeCode = store && order.date.week = week && order.date.year = year)
+                                   .Select(fun order -> order.cost)
+                                   .Sum()
+
+    printfn "Total cost for %s in store %s for week %d: %.2f" supplierType store week totalCost
 
 
 let HandleInput(input: string) =
