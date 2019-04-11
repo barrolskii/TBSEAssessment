@@ -17,7 +17,6 @@ namespace TBSEAssessmentOne
 {
 	public partial class Form1 : Form
 	{
-		string storeCSVFileLocation;
 		Task t1;
 		Dictionary<string, Store> Stores;
 		ConcurrentQueue<Date> queueDate;
@@ -95,11 +94,7 @@ namespace TBSEAssessmentOne
 
             Dictionary<string, double> SupplierTypeCost = new Dictionary<string, double>();
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-
-            string fileToSearch = storeCSVFileLocation + "StoreData/" + CBStoreSearchStore.Text + '_' + CBStoreSearchWeek.Text + '_' + CBStoreSearchYear.Text + ".csv";
+            string fileToSearch = "StoreData/" + CBStoreSearchStore.Text + '_' + CBStoreSearchWeek.Text + '_' + CBStoreSearchYear.Text + ".csv";
             string[] storeData = File.ReadAllLines(fileToSearch);
 
             /* If the cell rows already contain data then remove them */
@@ -145,14 +140,7 @@ namespace TBSEAssessmentOne
 
             textBox2.Text = "Total cost: " + totalCost.ToString("C2");
 
-            sw.Stop();
-
             TabCtrlDataDisplay.SelectedTab = StoreData;
-
-            /* Output for debgging purposes */
-            richTextBox1.Text += "Time: " + sw.Elapsed + '\n';
-            richTextBox1.Text += "Row count: " + dataGridView2.Rows.Count + '\n'; // 628
-            richTextBox1.Text += "Total cost: " + totalCost.ToString("C2") + '\n'; // 22440.79
         }
 
         private void BtnSupplierSearchSupplier_Click(object sender, EventArgs e)
@@ -193,6 +181,8 @@ namespace TBSEAssessmentOne
             {
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
             }
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         private void BtnSupplierSearchSupplierType_Click(object sender, EventArgs e)
@@ -233,6 +223,8 @@ namespace TBSEAssessmentOne
             {
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Please choose a week, a store or both\n"));
             }
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         #endregion
@@ -338,23 +330,9 @@ namespace TBSEAssessmentOne
            
 			stopwatch.Stop();
 
-            LblLoadingBar.Invoke(new Action(() => LblLoadingBar.Text = "Data loaded successfully"));
+            LblLoadingBar.Invoke(new Action(() => LblLoadingBar.Text = "Data loaded successfully. Time taken: " + stopwatch.Elapsed));
 
-            #region Debugging messages
             textBox3.Invoke(new Action(() => textBox3.Text = "Total cost: £" + costs.ToString("0.00")));
-
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time to load: " + stopwatch.Elapsed + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Dictionary key count: " + Stores.Keys.Count + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue count: " + queueDate.Count + '\n'));
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Queue order count: " + queueOrder.Count + '\n'));
-
-
-			richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Total cost of orders: " + costs.ToString("0.00") + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBStoreSearchStore.Items.Count + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBSupplierSearchStore.Items.Count + '\n'));
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "cb count: " + CBSupplierTypeSearchStore.Items.Count + '\n'));
-            #endregion
-
 
 
             /* Enable combo boxes for search queries */
@@ -529,6 +507,8 @@ namespace TBSEAssessmentOne
 
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": " + test.ToString("C2") + "\n"));
             }
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         private void CBSupplierSearchSupplier_TextChanged(object sender, EventArgs e)
@@ -558,6 +538,8 @@ namespace TBSEAssessmentOne
                                                       .Sum();
 
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": " + costOfAllStoresInAWeek.ToString("C2") + "\n"));
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         private void CBAllStoreSearchSupplier_TextChanged(object sender, EventArgs e)
@@ -569,6 +551,8 @@ namespace TBSEAssessmentOne
                                                            .Sum();
 
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplier + ": " + costOfAllOrdersForASupplier.ToString("C2") + "\n"));
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         private void CBAllStoreSearchSupplierType_TextChanged(object sender, EventArgs e)
@@ -580,6 +564,8 @@ namespace TBSEAssessmentOne
                                                               .Sum();
 
             richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + supplierType + ": " + costOfAllOrdersToASupplierType.ToString("C2") + "\n"));
+
+            TabCtrlDataDisplay.SelectedTab = StoreList;
         }
 
         private void CBStoreComparisonStore_TextChanged(object sender, EventArgs e)
@@ -647,10 +633,6 @@ namespace TBSEAssessmentOne
 
             double totalCost = quarterOne + quarterTwo + quarterThree + quarterFour;
 
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "14 total cost: " + totalCost + ": " + pieChart.Name + '\n'));
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
 
             double[] monthOrders2013 = new double[12];
             double[] monthOrders2014 = new double[12];
@@ -671,7 +653,6 @@ namespace TBSEAssessmentOne
                 monthOrders2014[i] = weekTotal;
             });
 
-            stopwatch.Stop();
 
             string[] months = Enum.GetNames(typeof(Months));
 
@@ -684,8 +665,6 @@ namespace TBSEAssessmentOne
 
 
             lineChart.Show();
-
-            richTextBox1.Invoke(new Action(() => richTextBox1.Text += "Time: " + stopwatch.Elapsed + '\n'));
         }
     }
 }
