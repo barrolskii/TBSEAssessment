@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
@@ -17,7 +18,9 @@ namespace TBSEAssessmentOneConsole
 
         private string storeCodesFilePath;
         private string storesFolderPath;
+
         bool hasFinished;
+        int fileCount;
 
         public StoreAnalyser()
         {
@@ -26,6 +29,7 @@ namespace TBSEAssessmentOneConsole
             queueOrder = new ConcurrentQueue<Order>();
 
             hasFinished = false;
+            fileCount = 0;
         }
 
         public void Start()
@@ -69,13 +73,19 @@ namespace TBSEAssessmentOneConsole
         {
             Console.WriteLine("Loading data please wait");
 
+            int itr = 0;
+
             // Wait for the task to finish
             while(!hasFinished)
             {
-                // Do nothing
+                if (fileCount / 130 > itr)
+                {
+                    Console.Write("=");
+                    itr++;
+                }
             }
 
-            Console.WriteLine("Finished loading");
+            Console.WriteLine("\nFinished loading");
         }
 
         private void ReadAllFiles()
@@ -129,6 +139,7 @@ namespace TBSEAssessmentOneConsole
                     queueOrder.Enqueue(order);
                 }
 
+                Interlocked.Increment(ref fileCount);
             });
 
             stopwatch.Stop();
