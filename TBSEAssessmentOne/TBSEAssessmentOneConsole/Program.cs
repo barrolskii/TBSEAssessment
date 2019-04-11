@@ -12,11 +12,14 @@ namespace TBSEAssessmentOneConsole
 {
     class Program
     {
+        public static int fileCount = 10400;
+        public static int currentCount = 0;
+
         static void Main(string[] args)
         {
             StoreAnalyser SA = new StoreAnalyser();
 
-            SA.ReadAllFiles();
+            SA.Start();
             SA.MainLoop();
         }
     }

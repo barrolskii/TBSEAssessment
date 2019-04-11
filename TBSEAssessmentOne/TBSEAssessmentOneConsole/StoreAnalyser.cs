@@ -15,23 +15,24 @@ namespace TBSEAssessmentOneConsole
         private ConcurrentQueue<Date> queueDate;
         private ConcurrentQueue<Order> queueOrder;
 
+        private string storeCodesFilePath;
+        private string storesFolderPath;
+        bool hasFinished;
+
         public StoreAnalyser()
         {
             Stores = new Dictionary<string, Store>();
             queueDate = new ConcurrentQueue<Date>();
             queueOrder = new ConcurrentQueue<Order>();
+
+            hasFinished = false;
         }
 
-        public void ReadAllFiles()
+        public void Start()
         {
-            // Exact folder path for copy paste
-            // C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
-
             string folderPath = "StoreData";
             string storeCodesFile = "StoreCodes.csv";
 
-            string storeCodesFilePath;
-            string storesFolderPath;
             do
             {
                 Console.WriteLine("Please enter the path to the store data");
@@ -53,6 +54,34 @@ namespace TBSEAssessmentOneConsole
                     break;
             }
             while (true);
+
+
+            Task t1 = new Task(() => ReadAllFiles());
+            Task t2 = new Task(() => PrintWaitList());
+
+            t1.Start();
+            t2.Start();
+
+            Task.WaitAll(t1, t2);
+        }
+
+        private void PrintWaitList()
+        {
+            Console.WriteLine("Loading data please wait");
+
+            // Wait for the task to finish
+            while(!hasFinished)
+            {
+                // Do nothing
+            }
+
+            Console.WriteLine("Finished loading");
+        }
+
+        private void ReadAllFiles()
+        {
+            // Exact folder path for copy paste
+            // C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug
 
             string[] storeList = File.ReadAllLines(storeCodesFilePath);
 
@@ -103,6 +132,8 @@ namespace TBSEAssessmentOneConsole
             });
 
             stopwatch.Stop();
+
+            hasFinished = true;
 
             Console.WriteLine("Time to load: {0} \n", stopwatch.Elapsed);
             Console.WriteLine("Dictionary key count: {0} \n", Stores.Keys.Count);
