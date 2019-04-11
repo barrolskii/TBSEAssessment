@@ -71,21 +71,43 @@ namespace TBSEAssessmentOneConsole
 
         private void PrintWaitList()
         {
+            Console.Clear();
+            Console.OutputEncoding = Encoding.Unicode;
             Console.WriteLine("Loading data please wait");
+            Console.WriteLine(" ________________________________________________________________________________\n");
+
+            Console.WriteLine(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾");
+
 
             int itr = 0;
 
+            char[] progress = Enumerable.Repeat<char>(' ', 80).ToArray();
+
+            Console.CursorVisible = false;
+            Console.SetCursorPosition(0, 2);
+
             // Wait for the task to finish
-            while(!hasFinished)
+            while (!hasFinished || fileCount / 130 > itr)
             {
                 if (fileCount / 130 > itr)
                 {
-                    Console.Write("=");
+                    Console.Write("\r|");
+                    progress[itr] = '#';
+
+                    foreach (char c in progress)
+                    {
+                        Console.Write(c);
+                    }
+                    Console.Write("|");
+
                     itr++;
                 }
             }
 
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(0, 4);
             Console.WriteLine("\nFinished loading");
+            Console.WriteLine("Press enter to continue");
         }
 
         private void ReadAllFiles()
@@ -146,12 +168,7 @@ namespace TBSEAssessmentOneConsole
 
             hasFinished = true;
 
-            Console.WriteLine("Time to load: {0} \n", stopwatch.Elapsed);
-            Console.WriteLine("Dictionary key count: {0} \n", Stores.Keys.Count);
-            Console.WriteLine("Queue count: {0} \n", queueDate.Count);
-            Console.WriteLine("Queue order count: {0} \n", queueOrder.Count);
-
-            Console.WriteLine("Data loaded successfully. Press enter to continue");
+            /* Console.WriteLine("\nTime to load: {0} \n", stopwatch.Elapsed); */
             Console.ReadLine();
         }
 
