@@ -37,8 +37,8 @@ type Order =
         val supplierType: string
         val cost: double
 
-        new (s, d, sup, supt, c) =
-            { store = s; date = d; supplier = sup; supplierType = supt; cost = c; }
+        new (store, date, supplier, supplierType, cost) =
+            { store = store; date = date; supplier = supplier; supplierType = supplierType; cost = cost; }
     end
 
 let stores = new Dictionary<string, Store>()
@@ -212,25 +212,6 @@ let CheckInput(input: string) =
 
 
 
-let TestStructFunc() = 
-    let test = new Date(2, 2014)
-    printfn "week %d" test.week
-    printfn "year %d" test.year
-
-    let test2 = new Store("NEW1", "Newport")
-    printfn "\ncode %s" test2.storeCode
-    printfn "loc %s" test2.storeLoc
-
-    let test3 = new Order(test2, test, "Heinz", "Food", 2.80)
-    printfn "\ncode: %s" test3.store.storeCode
-    printfn "loc: %s" test3.store.storeLoc
-    printfn "week: %d" test3.date.week
-    printfn "year: %d" test3.date.year
-    printfn "supplier: %s" test3.supplier
-    printfn "type: %s" test3.supplierType
-    printfn "cost: %g" test3.cost
-
-
 let MainLoop() = 
     PrintSelectionOptions()
 
@@ -241,6 +222,7 @@ let MainLoop() =
         match input with
         | "q" -> quit <- true
         | _ -> CheckInput(input)
+
 
 type Data() =
     member x.ReadAllData() =

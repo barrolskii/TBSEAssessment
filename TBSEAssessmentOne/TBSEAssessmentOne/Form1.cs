@@ -155,12 +155,6 @@ namespace TBSEAssessmentOne
             richTextBox1.Text += "Total cost: " + totalCost.ToString("C2") + '\n'; // 22440.79
         }
 
-        /* Test button for temp function implementation */
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void BtnSupplierSearchSupplier_Click(object sender, EventArgs e)
         {
             // Supplier
@@ -529,14 +523,10 @@ namespace TBSEAssessmentOne
 
             if (store != "")
             {
-                double costOfAllOrdersToAStore = queueOrder.Where(order => order.store.storeCode == store)
-                                                         .Select(order => order.cost)
-                                                         .Sum();
-
                 double test = queueOrder.AsParallel().Where(order => order.store.storeCode == store)
                                                      .Select(order => order.cost).Sum();
 
-                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": " + costOfAllOrdersToAStore.ToString("C2") + "\n"));
+
                 richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for " + store + ": " + test.ToString("C2") + "\n"));
             }
         }
