@@ -226,8 +226,14 @@ let MainLoop() =
 
 type Data() =
     member x.ReadAllData() =
-        
-        use stream = new StreamReader @"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\StoreCodes.csv"
+
+        let folderPath : string = "StoreData"
+        let storeCodesFile : string = "StoreCodes.csv"
+
+        printfn("Enter the path of the store file");
+        let path = Console.ReadLine();
+
+        use stream = new StreamReader(@"" + path + storeCodesFile)
 
 
         let folderPath: string = "StoreData"
@@ -248,7 +254,7 @@ type Data() =
                 stores.Add(lineSplit.[0], store)
 
 
-        let fileNames: string[] = Directory.GetFiles(@"C:\Users\b012361h\Documents\GitHub\TBSEAssessment\TBSEAssessmentOne\TBSEAssessmentOne\bin\Debug\StoreData")
+        let fileNames: string[] = Directory.GetFiles(@"" + path + folderPath)
 
         let doParallelForEach =
             Parallel.ForEach(fileNames, (fun file ->
