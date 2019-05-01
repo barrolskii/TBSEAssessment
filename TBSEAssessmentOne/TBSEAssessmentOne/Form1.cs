@@ -531,15 +531,18 @@ namespace TBSEAssessmentOne
 
         private void CBAllStoreSearchWeek_TextChanged(object sender, EventArgs e)
         {
-            int week = Convert.ToInt32(CBAllStoreSearchWeek.Text);
+            if (CBAllStoreSearchWeek.Text != "")
+            {
+                int week = Convert.ToInt32(CBAllStoreSearchWeek.Text);
 
-            double costOfAllStoresInAWeek = queueOrder.Where(order => order.date.week == week)
-                                                      .Select(order => order.cost)
-                                                      .Sum();
+                double costOfAllStoresInAWeek = queueOrder.Where(order => order.date.week == week)
+                                                          .Select(order => order.cost)
+                                                          .Sum();
 
-            richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": " + costOfAllStoresInAWeek.ToString("C2") + "\n"));
+                richTextBox3.Invoke(new Action(() => richTextBox3.Text += "Cost of all orders for week " + week + ": " + costOfAllStoresInAWeek.ToString("C2") + "\n"));
 
-            TabCtrlDataDisplay.SelectedTab = StoreList;
+                TabCtrlDataDisplay.SelectedTab = StoreList;
+            }
         }
 
         private void CBAllStoreSearchSupplier_TextChanged(object sender, EventArgs e)
