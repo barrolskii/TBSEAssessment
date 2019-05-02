@@ -35,6 +35,7 @@ namespace TBSEAssessmentOneConsole
             Console.WriteLine("-ps or -printstores to print all stores");
             Console.WriteLine("-pst or -printsuppliertypes to print all supplier types");
             Console.WriteLine("-psup or -printsuppliers to print all suppliers");
+            Console.WriteLine("-q or -quit to exit the application");
 
             Console.WriteLine("===================================================================================");
 

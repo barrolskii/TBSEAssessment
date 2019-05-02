@@ -183,7 +183,7 @@ namespace TBSEAssessmentOneConsole
                 PrintSelectionOptions();
                 input = Console.ReadLine();
 
-                if (input == "q") break;
+                if (input == "-q" || input == "-quit") break;
 
                 CheckCommand(ref input);
             }
