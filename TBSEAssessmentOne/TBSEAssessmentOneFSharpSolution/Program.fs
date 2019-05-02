@@ -51,6 +51,7 @@ let PrintCommands() =
     printfn "-ps or -printstores to print all stores"
     printfn "-pst or -printsuppliertypes to print all supplier types"
     printfn "-psup or -printsuppliers to print all suppliers"
+    printfn "-q or -quit to exit the application"
     printfn "\n==================================================================================="
 
 
@@ -90,7 +91,7 @@ let PrintSuppliers() =
 let TotalCostOfAllOrders() =
     let totalCost: double = orders.Sum(fun order -> order.cost)
 
-    printfn "Total cost of all orders is: %.2f" totalCost
+    printfn "Total cost of all orders is: £%.2f" totalCost
 
 
 let CostOfAllOrdersForASingleStore() =
@@ -98,7 +99,7 @@ let CostOfAllOrdersForASingleStore() =
     let store: string = Console.ReadLine()
 
     let totalCost: double = orders.Where(fun order -> order.store.storeCode = store).Select(fun order -> order.cost).Sum()
-    printfn "Total cost of orders for %s is: %.2f" store totalCost
+    printfn "Total cost of orders for %s is: £%.2f" store totalCost
 
 
 let CostOfAllOrdersInAWeekForAllStores() =
@@ -106,7 +107,7 @@ let CostOfAllOrdersInAWeekForAllStores() =
     let week: int = Convert.ToInt32(Console.ReadLine())
 
     let totalCost: double = orders.Where(fun order -> order.date.week = week).Select(fun order -> order.cost).Sum()
-    printfn "Total cost of all orders for week %d: %.2f" week totalCost
+    printfn "Total cost of all orders for week %d: £%.2f" week totalCost
 
 
 let CostOfAllOrdersInASingleWeekForAStore() =
@@ -120,7 +121,7 @@ let CostOfAllOrdersInASingleWeekForAStore() =
     let year: int = Convert.ToInt32(Console.ReadLine())
 
     let totalCost: double = orders.Where(fun order -> order.date.week = week && order.store.storeCode = store && order.date.year = year).Select(fun order -> order.cost).Sum()
-    printfn "Total cost of all orders for %s in week %d: %.2f" store week totalCost
+    printfn "Total cost of all orders for %s in week %d: £%.2f" store week totalCost
 
 
 let CostOfAllOrdersToASupplier() =
@@ -128,7 +129,7 @@ let CostOfAllOrdersToASupplier() =
     let supplier: string = Console.ReadLine()
 
     let totalCost: double = orders.Where(fun order -> order.supplier = supplier).Select(fun order -> order.cost).Sum()
-    printfn "Total cost for %s: %.2f" supplier totalCost
+    printfn "Total cost for %s: £%.2f" supplier totalCost
 
 
 let CostOfAllOrdersToASupplierType() =
@@ -136,7 +137,7 @@ let CostOfAllOrdersToASupplierType() =
     let supplierType: string = Console.ReadLine()
 
     let totalCost: double = orders.Where(fun order -> order.supplierType = supplierType).Select(fun order -> order.cost).Sum()
-    printfn "Total cost for %s: %.2f" supplierType totalCost
+    printfn "Total cost for %s: £%.2f" supplierType totalCost
 
 
 let CostOfAllOrdersInAWeekToASupplierType() =
@@ -150,7 +151,7 @@ let CostOfAllOrdersInAWeekToASupplierType() =
     let year: int = Convert.ToInt32(Console.ReadLine())
 
     let totalCost: double = orders.Where(fun order -> order.supplierType = supplierType && order.date.week = week && order.date.year = year).Select(fun order -> order.cost).Sum()
-    printfn "Total cost for %s in week %d: %.2f" supplierType week totalCost
+    printfn "Total cost for %s in week %d: £%.2f" supplierType week totalCost
 
 
 let CostOfAllOrdersToASupplierTypeForAStore() =
@@ -161,7 +162,7 @@ let CostOfAllOrdersToASupplierTypeForAStore() =
     let store: string = Console.ReadLine()
 
     let totalCost: double = orders.Where(fun order -> order.store.storeCode = store && order.supplierType = supplierType).Select(fun order -> order.cost).Sum()
-    printfn "Total cost for %s in store %s: %.2f" supplierType store totalCost
+    printfn "Total cost for %s in store %s: £%.2f" supplierType store totalCost
 
 
 let CostOfAllOrdersInAWeekToASupplierTypeForAStore() =
@@ -181,7 +182,7 @@ let CostOfAllOrdersInAWeekToASupplierTypeForAStore() =
                                    .Select(fun order -> order.cost)
                                    .Sum()
 
-    printfn "Total cost for %s in store %s for week %d: %.2f" supplierType store week totalCost
+    printfn "Total cost for %s in store %s for week %d: £%.2f" supplierType store week totalCost
 
 
 let HandleInput(input: string) =
@@ -220,7 +221,8 @@ let MainLoop() =
         let input = Console.ReadLine()
 
         match input with
-        | "q" -> quit <- true
+        | "-q" -> quit <- true
+        | "-quit" -> quit <- true
         | _ -> CheckInput(input)
 
 
